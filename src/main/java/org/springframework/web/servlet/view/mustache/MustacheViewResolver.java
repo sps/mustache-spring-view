@@ -15,34 +15,24 @@
  */
 package org.springframework.web.servlet.view.mustache;
 
-import java.io.FileNotFoundException;
-import java.io.StringWriter;
-
-import org.apache.commons.io.IOUtils;
-import org.springframework.context.ResourceLoaderAware;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.AbstractTemplateViewResolver;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
 
-import com.sampullara.mustache.Mustache;
-import com.sampullara.mustache.MustacheCompiler;
+import com.samskivert.mustache.Mustache;
+import com.samskivert.mustache.MustacheTemplateLoader;
+import com.samskivert.mustache.Template;
 
 /**
  * @author Sean Scanlon <sean.scanlon@gmail.com>
  * 
  */
 public class MustacheViewResolver extends AbstractTemplateViewResolver implements ViewResolver,
-        ResourceLoaderAware {
+        InitializingBean {
 
-    /*
-     * TODO: this will work for now, but will probably want to make some options externally
-     * configurable.
-     */
-    private static final MustacheCompiler MUSTACHE_COMPILER = new MustacheCompiler();
-
-    private ResourceLoader resourceLoader;
+    private MustacheTemplateLoader templateLoader;
 
     public MustacheViewResolver() {
         setViewClass(MustacheView.class);
@@ -58,26 +48,20 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
 
         final MustacheView view = (MustacheView) super.buildView(viewName);
 
-        Resource resource = resourceLoader.getResource(view.getUrl());
-        if (resource.exists()) {
-            /*
-             * TODO: might be better to supply the path instead of the entire template.
-             */
-            StringWriter writer = new StringWriter();
-            IOUtils.copy(resource.getInputStream(), writer);
-            Mustache template = MUSTACHE_COMPILER.parse(writer.toString());
-            template.setRoot(resource.getFile().getParentFile());
-            view.setTemplate(template);
-        } else {
-            throw new FileNotFoundException(viewName);
-        }
+        Template template = Mustache.compiler().compile(templateLoader.getTemplate(view.getUrl()));
+        view.setTemplate(template);
 
         return view;
     }
 
     @Override
-    public void setResourceLoader(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
+    public void afterPropertiesSet() throws Exception {
+        Mustache.setTemplateLoader(templateLoader);
+    }
+
+    @Required
+    public void setTemplateLoader(MustacheTemplateLoader templateLoader) {
+        this.templateLoader = templateLoader;
     }
 
 }

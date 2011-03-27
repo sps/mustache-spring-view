@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.PrintWriter;
 import java.util.Collections;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,7 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.sampullara.mustache.Mustache;
+import com.samskivert.mustache.Template;
 
 /**
  * @author Sean Scanlon <sean.scanlon@gmail.com>
@@ -34,14 +35,15 @@ import com.sampullara.mustache.Mustache;
  */
 public class MustacheViewTest {
 
-    private Mustache template;
+    private Template template;
     private HttpServletResponse response;
     private PrintWriter mockWriter;
     private MustacheView view;
 
     @Before
     public void setUp() throws Exception {
-        template = Mockito.mock(Mustache.class);
+
+        template = Mockito.mock(Template.class);
         response = Mockito.mock(HttpServletResponse.class);
         mockWriter = Mockito.mock(PrintWriter.class);
 
@@ -51,10 +53,15 @@ public class MustacheViewTest {
 
     @Test
     public void testRenderMergedTemplateModel() throws Exception {
-
+        
+        final Map<String, Object> model = Collections.<String, Object> emptyMap();
+        
         Mockito.doReturn(mockWriter).when(response).getWriter();
 
-        view.renderMergedTemplateModel(Collections.<String, Object> emptyMap(), null, response);
+        view.renderMergedTemplateModel(model, null, response);
+
+        Mockito.verify(template).execute(model, mockWriter);
+        Mockito.verify(mockWriter).flush();
 
         assertEquals(template, view.getTemplate());
     }
