@@ -19,6 +19,6 @@ spring config
         <property name="prefix" value="" />
         <property name="suffix" value=".html" />
         <property name="templateLoader">
-            <bean class="org.springframework.web.servlet.view.mustache.TemplateLoader" />
+            <bean class="org.springframework.web.servlet.view.mustache.MustacheTemplateLoader"" />
         </property>
     </bean>
