@@ -1,10 +1,6 @@
 [mustache.js](http://mustache.github.com/mustache.5.html) view for [spring3](http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/mvc.html)
 ---------------------------
 
-**note**: currently building against a [non-released version of jmustache:](https://github.com/sps/jmustache)
-you will need to install this locally before you can build and use this view.
-
-
 maven dependency
 -----------------
 
