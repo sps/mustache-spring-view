@@ -7,7 +7,7 @@ maven dependency
     <dependency>
         <groupId>com.github.sps.mustache</groupId>
         <artifactId>mustache-spring-view</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </dependency>
 
 
