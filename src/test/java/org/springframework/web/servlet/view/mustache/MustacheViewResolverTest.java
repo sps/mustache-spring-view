@@ -23,8 +23,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.samskivert.mustache.MustacheTemplateLoader;
-
 /**
  * @author Sean Scanlon <sean.scanlon@gmail.com>
  * 
@@ -42,6 +40,8 @@ public class MustacheViewResolverTest {
 
         viewResolver = new MustacheViewResolver();
         viewResolver.setTemplateLoader(templateLoader);
+        viewResolver.setStandardsMode(false);
+        viewResolver.setEscapeHTML(true);
         viewResolver.afterPropertiesSet();
 
     }

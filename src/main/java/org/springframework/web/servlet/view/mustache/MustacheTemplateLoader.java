@@ -23,13 +23,13 @@ import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
-import com.samskivert.mustache.MustacheTemplateLoader;
+import com.samskivert.mustache.Mustache.TemplateLoader;
 
 /**
  * @author Sean Scanlon <sean.scanlon@gmail.com>
  * 
  */
-public class TemplateLoader implements MustacheTemplateLoader, ResourceLoaderAware {
+public class MustacheTemplateLoader implements TemplateLoader, ResourceLoaderAware {
 
     private ResourceLoader resourceLoader;
 

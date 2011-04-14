@@ -30,14 +30,14 @@ import org.springframework.core.io.ResourceLoader;
 /**
  * @author Sean Scanlon <sean.scanlon@gmail.com>
  */
-public class TemplateLoaderTest {
+public class MustacheTemplateLoaderTest {
 
     private static final ClassPathResource TEST_TEMPLATE = new ClassPathResource("test-template.html",
-            TemplateLoaderTest.class);
+            MustacheTemplateLoaderTest.class);
 
     private Resource resource;
     private ResourceLoader resourceLoader;
-    private TemplateLoader loader;
+    private MustacheTemplateLoader loader;
 
     @Before
     public void setUp() throws Exception {
@@ -45,7 +45,7 @@ public class TemplateLoaderTest {
         resourceLoader = Mockito.mock(ResourceLoader.class);
         Mockito.doReturn(resource).when(resourceLoader).getResource(anyString());
 
-        loader = new TemplateLoader();
+        loader = new MustacheTemplateLoader();
         loader.setResourceLoader(resourceLoader);
     }
 

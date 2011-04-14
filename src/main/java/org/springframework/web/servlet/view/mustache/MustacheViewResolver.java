@@ -22,8 +22,8 @@ import org.springframework.web.servlet.view.AbstractTemplateViewResolver;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
 
 import com.samskivert.mustache.Mustache;
-import com.samskivert.mustache.MustacheTemplateLoader;
 import com.samskivert.mustache.Template;
+import com.samskivert.mustache.Mustache.Compiler;
 
 /**
  * @author Sean Scanlon <sean.scanlon@gmail.com>
@@ -33,6 +33,10 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
         InitializingBean {
 
     private MustacheTemplateLoader templateLoader;
+    private Compiler compiler;
+
+    private boolean standardsMode = false;
+    private boolean escapeHTML = true;
 
     public MustacheViewResolver() {
         setViewClass(MustacheView.class);
@@ -48,7 +52,7 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
 
         final MustacheView view = (MustacheView) super.buildView(viewName);
 
-        Template template = Mustache.compiler().compile(templateLoader.getTemplate(view.getUrl()));
+        Template template = compiler.compile(templateLoader.getTemplate(view.getUrl()));
         view.setTemplate(template);
 
         return view;
@@ -56,12 +60,33 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        Mustache.setTemplateLoader(templateLoader);
+        compiler = Mustache.compiler()
+                .escapeHTML(escapeHTML)
+                .standardsMode(standardsMode)
+                .withLoader(templateLoader);
     }
 
     @Required
     public void setTemplateLoader(MustacheTemplateLoader templateLoader) {
         this.templateLoader = templateLoader;
+    }
+
+    /**
+     * Whether or not standards mode is enabled.
+     * 
+     * disabled by default.
+     */
+    public void setStandardsMode(boolean standardsMode) {
+        this.standardsMode = standardsMode;
+    }
+
+    /**
+     * Whether or not HTML entities are escaped by default.
+     * 
+     * default is true.
+     */
+    public void setEscapeHTML(boolean escapeHTML) {
+        this.escapeHTML = escapeHTML;
     }
 
 }
