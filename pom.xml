@@ -22,6 +22,7 @@
     <scm>
         <url>http://github.com/sps/mustache-spring-view</url>
         <connection>scm:git:git://github.com/sps/mustache-spring-view.git</connection>
+        <developerConnection>scm:git:git://github.com/sps/mustache-spring-view.git</developerConnection>
     </scm>
     <developers>
         <developer>
