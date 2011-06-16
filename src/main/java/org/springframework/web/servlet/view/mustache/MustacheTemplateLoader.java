@@ -15,35 +15,40 @@
  */
 package org.springframework.web.servlet.view.mustache;
 
-import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-
+import com.samskivert.mustache.Mustache.TemplateLoader;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
-import com.samskivert.mustache.Mustache.TemplateLoader;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 /**
  * @author Sean Scanlon <sean.scanlon@gmail.com>
- * 
  */
 public class MustacheTemplateLoader implements TemplateLoader, ResourceLoaderAware {
 
-    private ResourceLoader resourceLoader;
+	private ResourceLoader resourceLoader;
 
-    public Reader getTemplate(String filename) throws Exception {
-        Resource resource = resourceLoader.getResource(filename);
-        if (resource.exists()) {
-            return new InputStreamReader(resource.getInputStream());
-        }
-        throw new FileNotFoundException(filename);
-    }
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
+	}
 
-    @Override
-    public void setResourceLoader(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
-    }
+    // encoding of template , configured in bean config
+	private String encoding = "iso8859-1";
+
+	public Reader getTemplate(String filename) throws Exception {
+		Resource resource = resourceLoader.getResource(filename);
+		if (resource.exists()) {
+			return new InputStreamReader(resource.getInputStream(), encoding);
+		}
+		throw new FileNotFoundException(filename);
+	}
+
+
+	public void setResourceLoader(ResourceLoader resourceLoader) {
+		this.resourceLoader = resourceLoader;
+	}
 
 }
