@@ -19,6 +19,15 @@ spring config
         <property name="prefix" value="" />
         <property name="suffix" value=".html" />
         <property name="templateLoader">
-            <bean class="org.springframework.web.servlet.view.mustache.MustacheTemplateLoader"" />
+            <property name="templateLoader">
+                <bean class="org.springframework.web.servlet.view.mustache.MustacheTemplateLoader">
+                    <!--encoding of template-->
+                    <property name="encoding" value="utf-8"/>
+                </bean>
+            </property>
+        </property>
+        <property name="contentType">
+            <!-- same with encoding of template-->
+            <value>text/html; charset=utf-8</value>
         </property>
     </bean>
