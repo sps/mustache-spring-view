@@ -16,6 +16,8 @@ spring config
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.mustache.MustacheViewResolver">
         <property name="cache" value="${TEMPLATE_CACHE_ENABLED}" />
+        <!-- do not throw exception when encouter null-->
+        <property name="nullValue" value=""/>
         <property name="prefix" value="" />
         <property name="suffix" value=".html" />
         <property name="templateLoader">
