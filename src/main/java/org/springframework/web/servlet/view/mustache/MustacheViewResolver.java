@@ -59,10 +59,10 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
 	}
 
 	public void afterPropertiesSet() throws Exception {
-		compiler = Mustache.compiler();
+		compiler = Mustache.compiler().withLoader(templateLoader);
 		// add config for nullValue
 		if (nullValue != null) {
-			compiler=compiler.nullValue(nullValue);
+			compiler = compiler.nullValue(nullValue);
 		}
 		compiler.escapeHTML(escapeHTML)
 				.standardsMode(standardsMode)

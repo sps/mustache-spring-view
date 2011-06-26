@@ -33,3 +33,11 @@ spring config
             <value>text/html; charset=utf-8</value>
         </property>
     </bean>
+    
+problem    
+---------------    
+
+support {{> }} grammar poorly , need full path , eg :
+
+{{> /WEB-INF/mustache/header.htm}}
+{{> /WEB-INF/mustache/following_footer.htm}}
