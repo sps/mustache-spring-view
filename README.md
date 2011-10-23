@@ -16,9 +16,28 @@ spring config
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.mustache.MustacheViewResolver">
         <property name="cache" value="${TEMPLATE_CACHE_ENABLED}" />
+        <!-- do not throw exception when encouter null-->
+        <property name="nullValue" value=""/>
         <property name="prefix" value="" />
         <property name="suffix" value=".html" />
         <property name="templateLoader">
-            <bean class="org.springframework.web.servlet.view.mustache.MustacheTemplateLoader"" />
+            <property name="templateLoader">
+                <bean class="org.springframework.web.servlet.view.mustache.MustacheTemplateLoader">
+                    <!--encoding of template-->
+                    <property name="encoding" value="utf-8"/>
+                </bean>
+            </property>
+        </property>
+        <property name="contentType">
+            <!-- same with encoding of template-->
+            <value>text/html; charset=utf-8</value>
         </property>
     </bean>
+    
+problem    
+---------------    
+
+support {{> }} grammar poorly , need full path , eg :
+
+{{> /WEB-INF/mustache/header.htm}}
+{{> /WEB-INF/mustache/following_footer.htm}}

@@ -27,66 +27,72 @@ import com.samskivert.mustache.Mustache.Compiler;
 
 /**
  * @author Sean Scanlon <sean.scanlon@gmail.com>
- * 
  */
 public class MustacheViewResolver extends AbstractTemplateViewResolver implements ViewResolver,
-        InitializingBean {
+		InitializingBean {
 
-    private MustacheTemplateLoader templateLoader;
-    private Compiler compiler;
+	private MustacheTemplateLoader templateLoader;
+	private Compiler compiler;
 
-    private boolean standardsMode = false;
-    private boolean escapeHTML = true;
+	private boolean standardsMode = false;
+	private boolean escapeHTML = true;
+	private String nullValue = null;
 
-    public MustacheViewResolver() {
-        setViewClass(MustacheView.class);
-    }
+	public MustacheViewResolver() {
+		setViewClass(MustacheView.class);
+	}
 
-    @Override
-    protected Class<?> requiredViewClass() {
-        return MustacheView.class;
-    }
+	@Override
+	protected Class<?> requiredViewClass() {
+		return MustacheView.class;
+	}
 
-    @Override
-    protected AbstractUrlBasedView buildView(String viewName) throws Exception {
+	@Override
+	protected AbstractUrlBasedView buildView(String viewName) throws Exception {
 
-        final MustacheView view = (MustacheView) super.buildView(viewName);
+		final MustacheView view = (MustacheView) super.buildView(viewName);
 
-        Template template = compiler.compile(templateLoader.getTemplate(view.getUrl()));
-        view.setTemplate(template);
+		Template template = compiler.compile(templateLoader.getTemplate(view.getUrl()));
+		view.setTemplate(template);
 
-        return view;
-    }
+		return view;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        compiler = Mustache.compiler()
-                .escapeHTML(escapeHTML)
-                .standardsMode(standardsMode)
-                .withLoader(templateLoader);
-    }
+	public void afterPropertiesSet() throws Exception {
+		compiler = Mustache.compiler().withLoader(templateLoader);
+		// add config for nullValue
+		if (nullValue != null) {
+			compiler = compiler.nullValue(nullValue);
+		}
+		compiler.escapeHTML(escapeHTML)
+				.standardsMode(standardsMode)
+				.withLoader(templateLoader);
+	}
 
-    @Required
-    public void setTemplateLoader(MustacheTemplateLoader templateLoader) {
-        this.templateLoader = templateLoader;
-    }
+	@Required
+	public void setTemplateLoader(MustacheTemplateLoader templateLoader) {
+		this.templateLoader = templateLoader;
+	}
 
-    /**
-     * Whether or not standards mode is enabled.
-     * 
-     * disabled by default.
-     */
-    public void setStandardsMode(boolean standardsMode) {
-        this.standardsMode = standardsMode;
-    }
+	/**
+	 * Whether or not standards mode is enabled.
+	 * <p/>
+	 * disabled by default.
+	 */
+	public void setStandardsMode(boolean standardsMode) {
+		this.standardsMode = standardsMode;
+	}
 
-    /**
-     * Whether or not HTML entities are escaped by default.
-     * 
-     * default is true.
-     */
-    public void setEscapeHTML(boolean escapeHTML) {
-        this.escapeHTML = escapeHTML;
-    }
+	/**
+	 * Whether or not HTML entities are escaped by default.
+	 * <p/>
+	 * default is true.
+	 */
+	public void setEscapeHTML(boolean escapeHTML) {
+		this.escapeHTML = escapeHTML;
+	}
 
+	public void setNullValue(String nullValue) {
+		this.nullValue = nullValue;
+	}
 }
