@@ -37,7 +37,7 @@ public class MustacheView extends AbstractTemplateView {
     @Override
     protected void renderMergedTemplateModel(Map<String, Object> model, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-
+    	model.put("partialAliases", getPartialAliases());
         response.setContentType(getContentType());
         renderTemplate(model, getTemplate(), response.getWriter());
     }
