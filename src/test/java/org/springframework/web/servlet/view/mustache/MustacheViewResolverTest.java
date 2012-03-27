@@ -15,9 +15,13 @@
  */
 package org.springframework.web.servlet.view.mustache;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.StringReader;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +36,7 @@ public class MustacheViewResolverTest {
     private MustacheViewResolver viewResolver;
     private MustacheTemplateLoader templateLoader;
     private String viewName;
+    private Map<String, String> partialAlises = new HashMap<String, String>();
 
     @Before
     public void setUp() throws Exception {
@@ -48,7 +53,15 @@ public class MustacheViewResolverTest {
 
     @Test
     public void testBuildView() throws Exception {
+        Mockito.doReturn(templateLoader).when(templateLoader).withPartialAliases(partialAlises);
         Mockito.doReturn(new StringReader("")).when(templateLoader).getTemplate(viewName);
+        
         assertNotNull(viewResolver.buildView(viewName));
     }
+    
+    @Test
+	public void testParseQuery() throws Exception {
+		URI i = new URI("a/b?layout=bingo");
+		assertEquals("bingo", viewResolver.parseQueryString(i.getQuery()).get("layout"));
+	}
 }
