@@ -1,21 +1,39 @@
-[mustache.js](http://mustache.github.com/mustache.5.html) view for [spring3](http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/mvc.html)
+[mustache.java](https://github.com/spullara/mustache.java) view for [spring3](http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/mvc.html)
 ---------------------------
+What is mustache: [mustache.js](http://mustache.github.com/mustache.5.html)
 
-This is a version of (https://github.com/sps/mustache-spring-view) that works with mustache.java.
+This is a version of [mustache-spring-view](https://github.com/sps/mustache-spring-view) that
+ works with [mustache.java](https://github.com/spullara/mustache.java).
 
-mustache.java: (https://github.com/spullara/mustache.java)
+Getting Started
+-----------------
+See: http://blog.springsource.com/2011/01/04/green-beans-getting-started-with-spring-mvc/
 
-maven dependency
+And the following sections
+
+Maven dependency
 -----------------
 
-    <dependency>
-        <groupId>com.github.ericdwhite.mustachejava-spring-webmvc</groupId>
-        <artifactId>mustache-spring-view</artifactId>
-        <version>0.1-SNAPSHOT</version>
-    </dependency>
+    <dependencies>
+        ...
+        <dependency>
+            <groupId>com.github.ericdwhite</groupId>
+	        <artifactId>mustache.java-spring-webmvc</artifactId>
+            <version>1.0-RELEASE</version>
+        </dependency>
+        ...
+    </dependencies>
+    
+    <repositories>
+    	...
+  		<repository>
+    		<id>Sonatype Snapshots</id>
+    		<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+  		</repository>
+  		...
+	</repositories>
 
-
-spring config
+Spring configuration
 -------------
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.mustache.MustacheViewResolver">
@@ -27,8 +45,7 @@ spring config
         </property>
     </bean>
     
-    
-example
+Example
 -------------
 WEB-INF/views/parent.html
 

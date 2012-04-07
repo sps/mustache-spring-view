@@ -17,7 +17,6 @@ package org.springframework.web.servlet.view.mustache;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.IOException;
 
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
@@ -40,10 +39,6 @@ public class MustacheTemplateLoader extends DefaultMustacheFactory implements Re
 	private ResourceLoader resourceLoader;
 	private String prefix = "";
 
-    public String getPrefix() {
-		return prefix;
-	}
-
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
 	}
@@ -61,8 +56,8 @@ public class MustacheTemplateLoader extends DefaultMustacheFactory implements Re
         	try {
         		return new InputStreamReader(resource.getInputStream());	
         	}
-        	catch(IOException e) {
-        		throw new RuntimeException("Failed to load template"+resourceName, e);        		
+        	catch(Exception e) {
+        		throw new RuntimeException("Failed to load template: "+resourceName, e);        		
         	}
         }
         throw new RuntimeException(resourceName);

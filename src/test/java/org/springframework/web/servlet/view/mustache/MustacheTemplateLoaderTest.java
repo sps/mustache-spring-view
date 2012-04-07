@@ -31,37 +31,87 @@ import org.springframework.core.io.ResourceLoader;
  */
 public class MustacheTemplateLoaderTest {
 
-    private static final ClassPathResource TEST_TEMPLATE = new ClassPathResource("test-template.html",
-            MustacheTemplateLoaderTest.class);
+	private static final ClassPathResource TEST_TEMPLATE = new ClassPathResource(
+			"/WEB-INF/views/test-template.html",
+			MustacheTemplateLoaderTest.class);
 
-    private Resource resource;
-    private ResourceLoader resourceLoader;
-    private MustacheTemplateLoader loader;
+	private static final ClassPathResource TEST_PARENT_TEMPLATE = new ClassPathResource(
+			"/WEB-INF/views/test-parent.html", MustacheTemplateLoaderTest.class);
 
-    @Before
-    public void setUp() throws Exception {
-        resource = Mockito.mock(Resource.class);
-        resourceLoader = Mockito.mock(ResourceLoader.class);
-        Mockito.doReturn(resource).when(resourceLoader).getResource(anyString());
+	private static final ClassPathResource TEST_PARTIAL_TEMPLATE = new ClassPathResource(
+			"/WEB-INF/views/test-partial.html",
+			MustacheTemplateLoaderTest.class);
 
-        loader = new MustacheTemplateLoader();
-        loader.setResourceLoader(resourceLoader);
-    }
+	private ResourceLoader resourceLoader;
+	private MustacheTemplateLoader loader;
 
-    @Test(expected = RuntimeException.class)
-    public void testResourceNotFound() throws Exception {
-        Mockito.doReturn(Boolean.FALSE).when(resource).exists();
-        loader.compile("");
-    }
+	private Resource anyResource;
+	private Resource invalidResource;
+	private Resource parentResource;
+	private Resource partialResource;
 
-    @Test
-    public void testResourceFound() throws Exception {
-        Mockito.doReturn(Boolean.TRUE).when(resource).exists();
-        Mockito.doReturn(TEST_TEMPLATE.getInputStream())
-                .when(resource)
-                .getInputStream();
-        Mockito.doReturn(TEST_TEMPLATE.getFile()).when(resource).getFile();
-        assertNotNull(loader.compile(""));
-    }
+	@Before
+	public void setUp() throws Exception {
+		anyResource = Mockito.mock(Resource.class);
+		invalidResource = Mockito.mock(Resource.class);
+		parentResource = Mockito.mock(Resource.class);
+		partialResource = Mockito.mock(Resource.class);
 
+		resourceLoader = Mockito.mock(ResourceLoader.class);
+		Mockito.doReturn(anyResource).when(resourceLoader)
+				.getResource(anyString());
+		Mockito.doReturn(invalidResource).when(resourceLoader)
+				.getResource("/WEB-INF/views/invalid");
+		Mockito.doReturn(parentResource).when(resourceLoader)
+				.getResource("/WEB-INF/views/test-parent.html");
+		Mockito.doReturn(partialResource).when(resourceLoader)
+				.getResource("/WEB-INF/views/test-partial.html");
+
+		loader = new MustacheTemplateLoader();
+		loader.setPrefix("/WEB-INF/views/");
+		loader.setResourceLoader(resourceLoader);
+	}
+
+	@Test(expected = RuntimeException.class)
+	public void testResourceNotFound() throws Exception {
+		Mockito.doReturn(Boolean.FALSE).when(anyResource).exists();
+		loader.compile("");
+	}
+
+	@Test(expected = RuntimeException.class)
+	public void testResourceFailedToLoad() throws Exception {
+		Mockito.doReturn(Boolean.TRUE).when(invalidResource).exists();
+		Mockito.doReturn(null)
+				.when(invalidResource).getInputStream();		
+		loader.compile("invalid");
+	}
+
+	@Test
+	public void testResourceFound() throws Exception {
+		Mockito.doReturn(Boolean.TRUE).when(anyResource).exists();
+		Mockito.doReturn(TEST_TEMPLATE.getInputStream()).when(anyResource)
+				.getInputStream();
+		Mockito.doReturn(TEST_TEMPLATE.getFile()).when(anyResource).getFile();
+
+		assertNotNull(loader.compile(""));
+	}
+
+	/**
+	 * This verifies that partials don't need to be fully qualified with the
+	 * prefix.
+	 */
+	@Test
+	public void testPartial() throws Exception {
+		Mockito.doReturn(Boolean.TRUE).when(parentResource).exists();
+		Mockito.doReturn(Boolean.TRUE).when(partialResource).exists();
+
+		Mockito.doReturn(TEST_PARENT_TEMPLATE.getInputStream())
+				.when(parentResource).getInputStream();
+		Mockito.doReturn(TEST_PARTIAL_TEMPLATE.getInputStream())
+				.when(partialResource).getInputStream();
+
+		Mockito.doReturn(TEST_PARENT_TEMPLATE.getFile()).when(parentResource)
+				.getFile();
+		assertNotNull(loader.compile("/WEB-INF/views/test-parent.html"));
+	}
 }
