@@ -14,12 +14,14 @@ And the following sections
 Maven dependency
 -----------------
 
+*NOTE: I'm awaiting authorization to push this centrally to sonatype.  I will remove this notice once this is done.*
+
     <dependencies>
         ...
         <dependency>
             <groupId>com.github.ericdwhite</groupId>
 	        <artifactId>mustache.java-spring-webmvc</artifactId>
-            <version>1.0-RELEASE</version>
+            <version>0.9.0-SNAPSHOT</version>
         </dependency>
         ...
     </dependencies>
