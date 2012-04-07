@@ -18,8 +18,6 @@ package org.springframework.web.servlet.view.mustache;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyString;
 
-import java.io.FileNotFoundException;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -29,6 +27,7 @@ import org.springframework.core.io.ResourceLoader;
 
 /**
  * @author Sean Scanlon <sean.scanlon@gmail.com>
+ * @author Eric D. White <eric@ericwhite.ca>
  */
 public class MustacheTemplateLoaderTest {
 
@@ -49,10 +48,10 @@ public class MustacheTemplateLoaderTest {
         loader.setResourceLoader(resourceLoader);
     }
 
-    @Test(expected = FileNotFoundException.class)
+    @Test(expected = RuntimeException.class)
     public void testResourceNotFound() throws Exception {
         Mockito.doReturn(Boolean.FALSE).when(resource).exists();
-        loader.getTemplate("");
+        loader.compile("");
     }
 
     @Test
@@ -62,7 +61,7 @@ public class MustacheTemplateLoaderTest {
                 .when(resource)
                 .getInputStream();
         Mockito.doReturn(TEST_TEMPLATE.getFile()).when(resource).getFile();
-        assertNotNull(loader.getTemplate(""));
+        assertNotNull(loader.compile(""));
     }
 
 }

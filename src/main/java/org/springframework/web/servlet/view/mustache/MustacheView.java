@@ -23,15 +23,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.view.AbstractTemplateView;
 
-import com.samskivert.mustache.Template;
+import com.github.mustachejava.Mustache;
 
 /**
- * @author Sean Scanlon <sean.scanlon@gmail.com>
+ * This is the spring view use to generate the content
+ * based on a Mustache template.
  * 
+ * @author Sean Scanlon <sean.scanlon@gmail.com>
+ * @author Eric D. White <eric@ericwhite.ca>
  */
 public class MustacheView extends AbstractTemplateView {
 
-    private Template template;
+    private Mustache template;
 
     @Override
     protected void renderMergedTemplateModel(Map<String, Object> model, HttpServletRequest request,
@@ -40,17 +43,17 @@ public class MustacheView extends AbstractTemplateView {
         response.setContentType(getContentType());
         final Writer writer = response.getWriter();
         try {
-            template.execute(model, writer);
+            template.execute(writer, model);
         } finally {
             writer.flush();
         }
     }
 
-    public void setTemplate(Template template) {
+    public void setTemplate(Mustache template) {
         this.template = template;
     }
 
-    public Template getTemplate() {
+    public Mustache getTemplate() {
         return template;
     }
 }

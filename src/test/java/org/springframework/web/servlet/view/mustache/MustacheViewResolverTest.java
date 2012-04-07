@@ -17,38 +17,37 @@ package org.springframework.web.servlet.view.mustache;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.io.StringReader;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.github.mustachejava.Mustache;
+
 /**
  * @author Sean Scanlon <sean.scanlon@gmail.com>
- * 
+ * @author Eric D. White <eric@ericwhite.ca>
  */
 public class MustacheViewResolverTest {
 
+	private Mustache mustache;
     private MustacheViewResolver viewResolver;
     private MustacheTemplateLoader templateLoader;
     private String viewName;
 
     @Before
     public void setUp() throws Exception {
+    	mustache = Mockito.mock(Mustache.class);
         templateLoader = Mockito.mock(MustacheTemplateLoader.class);
         viewName = "viewname";
 
         viewResolver = new MustacheViewResolver();
         viewResolver.setTemplateLoader(templateLoader);
-        viewResolver.setStandardsMode(false);
-        viewResolver.setEscapeHTML(true);
         viewResolver.afterPropertiesSet();
-
     }
 
     @Test
     public void testBuildView() throws Exception {
-        Mockito.doReturn(new StringReader("")).when(templateLoader).getTemplate(viewName);
+        Mockito.doReturn(mustache).when(templateLoader).compile(viewName);
         assertNotNull(viewResolver.buildView(viewName));
     }
 }

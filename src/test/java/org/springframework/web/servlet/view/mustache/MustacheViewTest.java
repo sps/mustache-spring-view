@@ -27,15 +27,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.samskivert.mustache.Template;
+import com.github.mustachejava.Mustache;
 
 /**
  * @author Sean Scanlon <sean.scanlon@gmail.com>
- * 
+ * @author Eric D. White <eric@ericwhite.ca>
  */
 public class MustacheViewTest {
 
-    private Template template;
+    private Mustache template;
     private HttpServletResponse response;
     private PrintWriter mockWriter;
     private MustacheView view;
@@ -43,7 +43,7 @@ public class MustacheViewTest {
     @Before
     public void setUp() throws Exception {
 
-        template = Mockito.mock(Template.class);
+        template = Mockito.mock(Mustache.class);
         response = Mockito.mock(HttpServletResponse.class);
         mockWriter = Mockito.mock(PrintWriter.class);
 
@@ -60,7 +60,7 @@ public class MustacheViewTest {
 
         view.renderMergedTemplateModel(model, null, response);
 
-        Mockito.verify(template).execute(model, mockWriter);
+        Mockito.verify(template).execute(mockWriter, model);
         Mockito.verify(mockWriter).flush();
 
         assertEquals(template, view.getTemplate());

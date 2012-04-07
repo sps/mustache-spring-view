@@ -21,22 +21,18 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.AbstractTemplateViewResolver;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
 
-import com.samskivert.mustache.Mustache;
-import com.samskivert.mustache.Template;
-import com.samskivert.mustache.Mustache.Compiler;
+import com.github.mustachejava.Mustache;
 
 /**
- * @author Sean Scanlon <sean.scanlon@gmail.com>
+ * This resolves views that are returned from the @Controller in Spring MVC.
  * 
+ * @author Sean Scanlon <sean.scanlon@gmail.com>
+ * @author Eric D. White <eric@ericwhite.ca>
  */
 public class MustacheViewResolver extends AbstractTemplateViewResolver implements ViewResolver,
         InitializingBean {
 
-    private MustacheTemplateLoader templateLoader;
-    private Compiler compiler;
-
-    private boolean standardsMode = false;
-    private boolean escapeHTML = true;
+	private MustacheTemplateLoader templateLoader = new MustacheTemplateLoader();
 
     public MustacheViewResolver() {
         setViewClass(MustacheView.class);
@@ -52,7 +48,7 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
 
         final MustacheView view = (MustacheView) super.buildView(viewName);
 
-        Template template = compiler.compile(templateLoader.getTemplate(view.getUrl()));
+        Mustache template = templateLoader.compile(view.getUrl());
         view.setTemplate(template);
 
         return view;
@@ -60,33 +56,11 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        compiler = Mustache.compiler()
-                .escapeHTML(escapeHTML)
-                .standardsMode(standardsMode)
-                .withLoader(templateLoader);
+    	templateLoader.setPrefix(this.getPrefix());
     }
 
     @Required
     public void setTemplateLoader(MustacheTemplateLoader templateLoader) {
         this.templateLoader = templateLoader;
     }
-
-    /**
-     * Whether or not standards mode is enabled.
-     * 
-     * disabled by default.
-     */
-    public void setStandardsMode(boolean standardsMode) {
-        this.standardsMode = standardsMode;
-    }
-
-    /**
-     * Whether or not HTML entities are escaped by default.
-     * 
-     * default is true.
-     */
-    public void setEscapeHTML(boolean escapeHTML) {
-        this.escapeHTML = escapeHTML;
-    }
-
 }
