@@ -4,12 +4,12 @@
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
-		<version>5</version>
+		<version>7</version>
 	</parent>
 	<groupId>com.github.ericdwhite</groupId>
 	<artifactId>mustache.java-spring-webmvc</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0-RELEASE</version>
+	<version>0.9.0-SNAPSHOT</version>
 	<name>mustache.java spring-webmvc view resolver</name>
 	<description>A spring view for the mustache.java templating language https://github.com/spullara/mustache.java</description>
 	<url>https://github.com/ericdwhite/mustache.java-spring-webmvc</url>
@@ -22,7 +22,7 @@
 	</licenses>
 	<scm>
 		<url>https://github.com/ericdwhite/mustache.java-spring-webmvc</url>
-		<connection>scm:git:git@github.com:ericdwhite/mustache.java-spring-webmvc.git</connection>
+		<connection>scm:git:https://ericdwhite@github.com/ericdwhite/mustache.java-spring-webmvc.git</connection>
 		<developerConnection>scm:git:git@github.com:ericdwhite/mustache.java-spring-webmvc.git</developerConnection>
 	</scm>
 	<developers>
