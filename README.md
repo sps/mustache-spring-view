@@ -5,6 +5,9 @@ What is mustache: [mustache.js](http://mustache.github.com/mustache.5.html)
 This is a version of [mustache-spring-view](https://github.com/sps/mustache-spring-view) that
  works with [mustache.java](https://github.com/spullara/mustache.java).
 
+Big thanks to sps (Sean Scanlon) for mustache-spring-view, which supports
+jmustache.  This code base is derived from mustache-spring-view.
+
 Getting Started
 -----------------
 See: http://blog.springsource.com/2011/01/04/green-beans-getting-started-with-spring-mvc/
