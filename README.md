@@ -14,7 +14,6 @@ And the following sections
 Maven dependency
 -----------------
 
-*NOTE: I'm awaiting authorization to push this centrally to sonatype.  I will remove this notice once this is done.*
 
     <dependencies>
         ...
