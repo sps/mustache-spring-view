@@ -86,7 +86,7 @@ public class MustacheTemplateLoaderTestCase {
 			}
 		});
 
-		Mustache template = templateLoader.compile(TEST_TEMPLATE);
+		Mustache template = templateLoader.compile(pathFor(TEST_TEMPLATE));
 		assertThat(template, notNullValue());
 	}
 
@@ -103,7 +103,8 @@ public class MustacheTemplateLoaderTestCase {
 			}
 		});
 
-		Mustache template = templateLoader.compile(PARENT_TEMPLATE);
+		// Spring will prefix the parent template automatically but not include partials
+		Mustache template = templateLoader.compile(pathFor(PARENT_TEMPLATE));
 		assertThat(template, notNullValue());
 	}
 
