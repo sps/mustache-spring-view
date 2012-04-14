@@ -25,22 +25,33 @@ import com.github.mustachejava.Mustache;
 
 /**
  * This resolves views that are returned from the @Controller in Spring MVC.
- * 
+ *
+ * In the controller you need to return a path to the mustache template.  This
+ * path is relative to the 'prefix' defined. See: UrlBasedViewResolver::buildView
+ *
+ * For example:
+ *       @Controller
+ *       public class HelloWorldController {
+ *
+ *          @RequestMapping(value="/hello")
+ *          public String hello(Model m) {
+ *              m.addAttribute("token", new java.util.Date());
+ *              return "parent";
+ *          }
+ *       }
+ *
+ * In this example "parent" is the name of the mustache template.
+ *
  * @author Sean Scanlon <sean.scanlon@gmail.com>
  * @author Eric D. White <eric@ericwhite.ca>
  */
 public class MustacheViewResolver extends AbstractTemplateViewResolver implements ViewResolver,
         InitializingBean {
 
-	private MustacheTemplateLoader templateLoader = new MustacheTemplateLoader();
+    private MustacheTemplateLoader templateLoader;
 
     public MustacheViewResolver() {
         setViewClass(MustacheView.class);
-    }
-
-    @Override
-    protected Class<?> requiredViewClass() {
-        return MustacheView.class;
     }
 
     @Override
@@ -54,13 +65,27 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
         return view;
     }
 
+    /**
+     * Forward the configuration onward so that the
+     * template loader knows the prefix used by the
+     * view resolver to lookup templates in the
+     * classpath.
+     */
     @Override
     public void afterPropertiesSet() throws Exception {
-    	templateLoader.setPrefix(this.getPrefix());
+        templateLoader.setPrefix(this.getPrefix());
     }
 
     @Required
     public void setTemplateLoader(MustacheTemplateLoader templateLoader) {
         this.templateLoader = templateLoader;
+    }
+
+    /**
+     * This is verified when the view class is set.
+     */
+    @Override
+    protected Class<?> requiredViewClass() {
+        return MustacheView.class;
     }
 }

@@ -15,6 +15,7 @@
  */
 package org.springframework.web.servlet.view.mustache;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
@@ -23,13 +24,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
 import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.MustacheException;
 
 /**
  * Uses the spring resource loader to find template files.
  * 
  * The prefix is set from the view resolver to handle partials
  * as the path to the parent will be fully qualified, but partials
- * with the parent will not be.
+ * within the parent will not be.
  * 
  * @author Sean Scanlon <sean.scanlon@gmail.com>
  * @author Eric D. White <eric@ericwhite.ca>
@@ -54,20 +56,20 @@ public class MustacheTemplateLoader extends DefaultMustacheFactory implements Re
         Resource resource = resourceLoader.getResource(resourceName);
         if (resource.exists()) {
         	try {
-        		return new InputStreamReader(resource.getInputStream());	
+                return new InputStreamReader(resource.getInputStream());
         	}
-        	catch(Exception e) {
-        		throw new RuntimeException("Failed to load template: "+resourceName, e);        		
+            catch(IOException e) {
+                throw new MustacheException("Failed to load template: "+resourceName, e);
         	}
         }
-        throw new RuntimeException(resourceName);
+        throw new MustacheException("No template exists named: "+resourceName);
 	}
 
     /**
      * This is to handle partials within templates
      * that have been prefixed in the View Resolver.
      * 
-     * As the parent will have a prefix, we want partials
+     * As the parent may have a prefix, we want partials
      * declared to also use the same prefix without explicitly
      * specifying that prefix in the parent template.
      * 
