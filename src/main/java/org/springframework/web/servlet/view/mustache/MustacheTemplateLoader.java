@@ -18,6 +18,7 @@ package org.springframework.web.servlet.view.mustache;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Map;
 
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
@@ -27,14 +28,35 @@ import com.samskivert.mustache.Mustache.TemplateLoader;
 
 /**
  * @author Sean Scanlon <sean.scanlon@gmail.com>
- * 
+ * @author Adam Gent <adam.gent@evocatus.com>
  */
 public class MustacheTemplateLoader implements TemplateLoader, ResourceLoaderAware {
 
     private ResourceLoader resourceLoader;
+    private Map<String, String> partialAliases;
+    
+    private String suffix = "";
+    private String prefix = "";
+
+    public MustacheTemplateLoader withPartialAliases(Map<String, String> aliases) {
+    	MustacheTemplateLoader loader = cloneTemplateLoader();
+    	return loader;
+    	
+    }
+    
+    protected MustacheTemplateLoader cloneTemplateLoader() {
+    	MustacheTemplateLoader loader = new MustacheTemplateLoader();
+    	loader.setPrefix(prefix);
+    	loader.setSuffix(suffix);
+    	loader.setResourceLoader(resourceLoader);
+    	loader.setPartialAliases(partialAliases);
+    	return loader;
+    }
 
     public Reader getTemplate(String filename) throws Exception {
-        Resource resource = resourceLoader.getResource(filename);
+    	String fn = partialAliases != null && partialAliases.containsKey(filename) ? 
+    			partialAliases.get(filename) : filename;
+        Resource resource = resourceLoader.getResource(getPrefix() + fn + getSuffix());
         if (resource.exists()) {
             return new InputStreamReader(resource.getInputStream());
         }
@@ -46,4 +68,26 @@ public class MustacheTemplateLoader implements TemplateLoader, ResourceLoaderAwa
         this.resourceLoader = resourceLoader;
     }
 
+	protected String getSuffix() {
+		return suffix;
+	}
+
+	public void setSuffix(String suffix) {
+		this.suffix = suffix;
+	}
+	
+	protected String getPrefix() {
+		return prefix;
+	}
+	
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+
+	public Map<String, String> getPartialAliases() {
+		return partialAliases;
+	}	
+	public void setPartialAliases(Map<String, String> aliases) {
+		this.partialAliases = aliases;
+	}
 }

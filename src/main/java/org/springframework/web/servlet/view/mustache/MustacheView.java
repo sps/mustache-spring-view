@@ -32,25 +32,35 @@ import com.samskivert.mustache.Template;
 public class MustacheView extends AbstractTemplateView {
 
     private Template template;
+    private Map<String,String> partialAliases;
 
     @Override
     protected void renderMergedTemplateModel(Map<String, Object> model, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-
+    	model.put("partialAliases", getPartialAliases());
         response.setContentType(getContentType());
-        final Writer writer = response.getWriter();
-        try {
-            template.execute(model, writer);
-        } finally {
-            writer.flush();
-        }
+        renderTemplate(model, getTemplate(), response.getWriter());
     }
+    
+	protected void renderTemplate(Map<String,Object> model, Template template, Writer writer) throws Exception {
+	    try {
+	        template.execute(model, writer);
+	    } finally {
+	    	if (writer != null)
+	    		writer.flush();
+	    }		
+	}
 
     public void setTemplate(Template template) {
         this.template = template;
     }
-
     public Template getTemplate() {
         return template;
     }
+	public Map<String, String> getPartialAliases() {
+		return partialAliases;
+	}
+	public void setPartialAliases(Map<String, String> templateAliases) {
+		this.partialAliases = templateAliases;
+	}	    
 }
