@@ -174,14 +174,14 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
      */
 	protected String findParentLayoutTemplate(String newViewName, TemplateLoader templateLoader) throws Exception {
 		String parentTemplate = null;
-		String[] paths = StringUtils.split(newViewName, "/");
+		String[] paths = StringUtils.tokenizeToStringArray(newViewName, "/");
 		if (paths == null) return null;
 		List<String> ps = new ArrayList<String>();
 		String cur = "";
 		for (String p : paths) {
 			if (hasText(p)) {
 				cur = cur + "/" + p;
-				ps.add(p);
+				ps.add(cur);
 			}
 		}
 		reverse(ps);
