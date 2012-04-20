@@ -84,3 +84,58 @@ A Controller
     		return "parent";
     	}
     }
+
+
+Mustache and Localization
+-------------
+If you want to use mustache in a localized application, you can use the MustacheMessageInterceptor.
+Configure your application for localization.
+See also for more background: http://viralpatel.net/blogs/2010/07/spring-3-mvc-internationalization-i18n-localization-tutorial-example.html
+
+Create resource bundle e.g.
+* messages_en.properties
+    > labels.global.mustache=mussy
+* messages_nl.properties
+    > labels.global.mustache=snor
+* ...
+
+Spring configuration for localization:
+
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="classpath:messages"/>
+    </bean>
+
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+        <property name="defaultLocale" value="en"/>
+    </bean>
+
+    <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+        <property name="paramName" value="lang"/>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+        <property name="interceptors">
+          <list>
+            <ref bean="localeChangeInterceptor"/>
+            <ref bean="messageInterceptor"/>
+          </list>
+        </property>
+    </bean>
+
+    <bean id="messageInterceptor" class="com.truvo.mdot.util.MustacheMessageInterceptor">
+        <constructor-arg ref="messageSource" />
+        <constructor-arg ref="localeResolver" />
+        <!--<property name="messageKey" value="message"/> default is 'message'-->
+    </bean>
+
+In your mustache template, do:
+
+    {{#message}}labels.global.mustache{{/message}}
+
+Will be replaced by (if your locale has language 'en'):
+
+    mussy
+
+
+
+

@@ -44,8 +44,9 @@
     </developers>
     <properties>
         <jdk.version>1.6</jdk.version>
-        <mustache.java.version>0.7.1-SNAPSHOT</mustache.java.version>
+        <mustache.java.version>0.7.3-SNAPSHOT</mustache.java.version>
         <org.springframework.version>3.1.0.RELEASE</org.springframework.version>
+        <google.guava.version>11.0.2</google.guava.version>
 
         <junit.version>4.8.2</junit.version>
         <jmock.version>2.5.1</jmock.version>
@@ -117,6 +118,12 @@
             <version>2.4</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${google.guava.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>junit</groupId>
@@ -154,6 +161,18 @@
             <version>${cglib.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${org.springframework.version}</version>
+            <scope>test</scope>
+      </dependency>
     </dependencies>
     <reporting>
         <plugins>
