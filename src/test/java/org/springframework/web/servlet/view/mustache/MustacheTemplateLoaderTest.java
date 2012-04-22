@@ -41,7 +41,7 @@ import com.github.mustachejava.MustacheException;
  * @author Eric D. White <eric@ericwhite.ca>
  */
 @RunWith(JMock.class)
-public class MustacheTemplateLoaderTestCase {
+public class MustacheTemplateLoaderTest {
 
 	private Mockery context = new Mockery();
 

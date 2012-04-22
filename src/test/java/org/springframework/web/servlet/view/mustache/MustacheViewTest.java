@@ -35,7 +35,7 @@ import com.github.mustachejava.Mustache;
  * @author Eric D. White <eric@ericwhite.ca>
  */
 @RunWith(JMock.class)
-public class MustacheViewTestCase {
+public class MustacheViewTest {
 	
 	private Mockery context = new Mockery(){{
 		setImposteriser(ClassImposteriser.INSTANCE);
