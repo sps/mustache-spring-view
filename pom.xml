@@ -52,11 +52,16 @@
         <jmock.version>2.5.1</jmock.version>
         <hamcrest.version>1.3.RC2</hamcrest.version>
         <cglib.version>2.2.2</cglib.version>
+
+        <skip.gpg>true</skip.gpg>
     </properties>
+
+
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
                 <configuration>
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
@@ -64,6 +69,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>2.1.2</version>
                 <configuration>
                     <includePom>true</includePom>
                 </configuration>
@@ -103,6 +109,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.4</version>
+                <configuration>
+                    <skip>${skip.gpg}</skip>
+                </configuration>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>

@@ -1,0 +1,4 @@
+= To Deploy to sonatype.org
+
+ $ mvn deploy -Dskip.gpg=false
+
