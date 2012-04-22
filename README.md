@@ -23,7 +23,7 @@ Maven dependency
         <dependency>
             <groupId>com.github.ericdwhite</groupId>
 	        <artifactId>mustache.java-spring-webmvc</artifactId>
-            <version>0.9.1-SNAPSHOT</version>
+            <version>0.9.2-SNAPSHOT</version>
         </dependency>
         ...
     </dependencies>
@@ -94,7 +94,7 @@ See also for more background: http://viralpatel.net/blogs/2010/07/spring-3-mvc-i
 
 Create resource bundle e.g.
 * messages_en.properties
-    > labels.global.mustache=mussy
+    > labels.global.mustache=moustache
 * messages_nl.properties
     > labels.global.mustache=snor
 * ...
@@ -122,19 +122,19 @@ Spring configuration for localization:
         </property>
     </bean>
 
-    <bean id="messageInterceptor" class="com.truvo.mdot.util.MustacheMessageInterceptor">
+    <bean id="messageInterceptor" class="org.springframework.web.servlet.i18n.MustacheMessageInterceptor">
         <constructor-arg ref="messageSource" />
         <constructor-arg ref="localeResolver" />
-        <!--<property name="messageKey" value="message"/> default is 'message'-->
+        <!--<property name="messageKey" value="i18n"/> default is 'i18n'-->
     </bean>
 
 In your mustache template, do:
 
-    {{#message}}labels.global.mustache{{/message}}
+    {{#i18n}}labels.global.mustache{{/i18n}}
 
 Will be replaced by (if your locale has language 'en'):
 
-    mussy
+    moustache
 
 
 

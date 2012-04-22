@@ -1,70 +1,140 @@
+/*
+ * Copyright 2012 the original author or authors.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package org.springframework.web.servlet.i18n;
 
-import com.google.common.base.Function;
-import org.junit.Assert;
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.springframework.context.MessageSource;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JMock;
+import org.jmock.lib.legacy.ClassImposteriser;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.context.MessageSource;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.ModelAndView;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
+
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.google.common.base.Function;
+
+@RunWith(JMock.class)
 public class MustacheMessageInterceptorTest {
+    private Mockery context = new Mockery() {
+        {
+            setImposteriser(ClassImposteriser.INSTANCE);
+        }
+    };
 
-  private MessageSource messageSource = Mockito.mock(MessageSource.class);
-  private LocaleResolver localeResolver = Mockito.mock(LocaleResolver.class);
+    private final MessageSource messageSource = context.mock(MessageSource.class);
+    private final LocaleResolver localeResolver = context.mock(LocaleResolver.class);
+    private final HttpServletResponse UNUSED_RESPONSE = null;
 
-  private MustacheMessageInterceptor messageInterceptor = new MustacheMessageInterceptor(messageSource, localeResolver);
+    private MustacheMessageInterceptor messageInterceptor = new MustacheMessageInterceptor(
+            messageSource, localeResolver);
 
-  @Test
-  @SuppressWarnings("unchecked")
-  public void testPostHandle() throws Exception {
-    ModelAndView mav = doPostHandle();
-    Assert.assertEquals(1, mav.getModel().size());
-    Map.Entry<String, Object> messageEntry = mav.getModel().entrySet().iterator().next();
-    Assert.assertEquals("message", messageEntry.getKey());
-    Assert.assertTrue(messageEntry.getValue() instanceof Function);
-  }
+    @Test
+    public void postHandlePlacesTheMessageInterceptorInTheModel() throws Exception {
+        ModelAndView mav = doPostHandle();
+        assertThat(mav.getModel().size(), equalTo(1));
 
-  @Test
-  @SuppressWarnings("unchecked")
-  public void testPostHandle_ExecuteFunction() throws Exception {
-    String testMessageCode = "labels.global.mustache";
-    String translatedMessage = "snor";
-    Mockito.when(messageSource.getMessage(testMessageCode, null, createLocale())).thenReturn(translatedMessage);
+        Map.Entry<String, Object> messageEntry = mav.getModel().entrySet().iterator().next();
 
-    ModelAndView mav = doPostHandle();
-    Assert.assertEquals(1, mav.getModel().size());
-    Map.Entry<String, Object> messageEntry = mav.getModel().entrySet().iterator().next();
-    String message = (String) ((Function) messageEntry.getValue()).apply(testMessageCode);
-    Assert.assertEquals(translatedMessage, message);
-  }
+        assertThat(messageEntry.getKey(), equalTo("i18n"));
+        assertThat(messageEntry.getValue(), instanceOf(Function.class));
+    }
 
-  @Test
-  public void testPostHandle_AlternativeModelKey() throws Exception {
-    String messagesModelKey = "testkey";
-    messageInterceptor.setMessageKey(messagesModelKey);
-    ModelAndView mav = doPostHandle();
-    Map.Entry<String, Object> messageEntry = mav.getModel().entrySet().iterator().next();
-    Assert.assertEquals(messagesModelKey, messageEntry.getKey());
-  }
+    /**
+     * This tests that function inserted into model would actually return the
+     * correct value when called from Mustache.
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void mustacheTemplateResolvesMessage() throws Exception {
+        final String i18nProperty = "labels.global.mustache";
+        final String translatedMessage = "snor";
 
-  private ModelAndView doPostHandle() throws Exception {
-    HttpServletRequest request = new MockHttpServletRequest();
-    Mockito.when(localeResolver.resolveLocale(request)).thenReturn(createLocale());
-    ModelAndView mav = new ModelAndView();
+        // Setup the model as per Spring
+        ModelAndView mav = doPostHandle();
 
-    messageInterceptor.postHandle(request, new MockHttpServletResponse(), null, mav);
-    return mav;
-  }
+        context.checking(new Expectations() {
+            {
+                Object[] NO_ARGS_ALLOWED = null;
+                oneOf(messageSource).getMessage(i18nProperty, NO_ARGS_ALLOWED, nlLocale());
+                will(returnValue(translatedMessage));
+            }
+        });
 
-  private Locale createLocale() {
-    return new Locale("nl", "BE");
-  }
+        // Create a simple mustache template
+        DefaultMustacheFactory mf = new DefaultMustacheFactory();
+        StringReader templateString = new StringReader("-{{#i18n}}labels.global.mustache{{/i18n}}-");
+        Mustache template = mf.compile(templateString, "i18n-test");
 
+        // Parse the template and resolve the internationalized parameters
+        StringWriter output = new StringWriter();
+        template.execute(output, mav.getModel());
+
+        // This is covered by the messageSource expectation, but lets make it
+        // explicit.
+        assertThat(output.toString(), equalTo("-" + translatedMessage + "-"));
+    }
+
+    @Test
+    public void handlesAlternateMessageKey() throws Exception {
+        String i18nKey = "testkey";
+        messageInterceptor.setMessageKey(i18nKey);
+        ModelAndView mav = doPostHandle();
+        Map.Entry<String, Object> messageEntry = mav.getModel().entrySet().iterator().next();
+        assertThat(messageEntry.getKey(), equalTo(i18nKey));
+    }
+
+    /**
+     * This method would be triggered by the Spring framework.
+     * 
+     * @return a modified model and view containing a Function handler for i18n
+     *         messages.
+     * @throws Exception
+     */
+    private ModelAndView doPostHandle() throws Exception {
+        final HttpServletRequest request = context.mock(HttpServletRequest.class);
+
+        context.checking(new Expectations() {
+            {
+                oneOf(localeResolver).resolveLocale(request);
+                will(returnValue(nlLocale()));
+            }
+        });
+
+        ModelAndView mav = new ModelAndView();
+        messageInterceptor.postHandle(request, UNUSED_RESPONSE, null, mav);
+        return mav;
+    }
+
+    private Locale nlLocale() {
+        return new Locale("nl", "BE");
+    }
 }
