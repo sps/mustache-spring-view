@@ -41,7 +41,9 @@ public class MustacheTemplateLoader extends DefaultMustacheFactory implements
 
     private ResourceLoader resourceLoader;
     private String prefix = "";
+    private String encoding = EncodingUtil.getEncoding();
 
+    
     public void setPrefix(String prefix) {
         this.prefix = prefix;
     }
@@ -57,7 +59,7 @@ public class MustacheTemplateLoader extends DefaultMustacheFactory implements
         Resource resource = resourceLoader.getResource(resourceName);
         if (resource.exists()) {
             try {
-                return new InputStreamReader(resource.getInputStream(), "utf-8");
+                return new InputStreamReader(resource.getInputStream(), encoding);
             } catch (IOException e) {
                 throw new MustacheException("Failed to load template: "
                         + resourceName, e);

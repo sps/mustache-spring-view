@@ -15,7 +15,13 @@
  */
 package org.springframework.web.servlet.view.mustache;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.equalTo;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -26,9 +32,6 @@ import org.junit.runner.RunWith;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.notNullValue;
 
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheException;
@@ -49,6 +52,8 @@ public class MustacheTemplateLoaderTest {
 	private static final String TEST_TEMPLATE = "test-template.html";
 	private static final String PARENT_TEMPLATE = "test-parent.html";
 	private static final String PARTIAL_TEMPLATE = "test-partial.html";
+	private static final String UTF8_TEMPLATE = "test-cjk.html";
+	
 
 	private static final ClassPathResource test = new ClassPathResource(
 			TEST_TEMPLATES_PATH.concat(TEST_TEMPLATE));
@@ -56,6 +61,8 @@ public class MustacheTemplateLoaderTest {
 			TEST_TEMPLATES_PATH.concat(PARENT_TEMPLATE));
 	private static final ClassPathResource partial = new ClassPathResource(
 			TEST_TEMPLATES_PATH.concat(PARTIAL_TEMPLATE));
+	private static final ClassPathResource utf8 = new ClassPathResource(
+			TEST_TEMPLATES_PATH.concat(UTF8_TEMPLATE));
 
 	private ResourceLoader resourceLoader;
 	private MustacheTemplateLoader templateLoader;
@@ -106,6 +113,41 @@ public class MustacheTemplateLoaderTest {
 		// Spring will prefix the parent template automatically but not include partials
 		Mustache template = templateLoader.compile(pathFor(PARENT_TEMPLATE));
 		assertThat(template, notNullValue());
+	}
+	
+	@Test
+	public void loadsATemplateContainingUTF8Characters() throws Exception {
+		context.checking(new Expectations() {
+			{
+				oneOf(resourceLoader).getResource(pathFor(UTF8_TEMPLATE));
+				will(returnValue(utf8));
+			}
+		});
+
+		// Spring will prefix the parent template automatically but not include partials
+		Mustache template = templateLoader.compile(pathFor(UTF8_TEMPLATE));
+		assertThat(template, notNullValue());
+		
+		ByteArrayOutputStream bout = new ByteArrayOutputStream();
+		PrintWriter pw = new PrintWriter(bout);
+		
+		template.execute(pw, new Object());
+		pw.flush();
+		pw.close();
+		
+		String isoLatin1Version = bout.toString("ISO-8859-1");
+		isoLatin1Version = isoLatin1Version.replaceAll("\\s", "");
+		isoLatin1Version = isoLatin1Version.substring(isoLatin1Version.lastIndexOf("White-"));
+		isoLatin1Version = isoLatin1Version.substring(5, isoLatin1Version.lastIndexOf('-')+1);
+		//System.out.println(isoLatin1Version);
+		assertThat(isoLatin1Version, equalTo("-ç½-"));
+
+		String utf8Version = bout.toString("UTF-8");
+		utf8Version = utf8Version.replaceAll("\\s", "");
+		utf8Version = utf8Version.substring(utf8Version.lastIndexOf("White-"));
+		utf8Version = utf8Version.substring(5, utf8Version.lastIndexOf('-')+1);
+		assertThat(utf8Version, equalTo("-白-"));
+		//System.out.println(utf8Version);
 	}
 
 	@Test(expected = MustacheException.class)

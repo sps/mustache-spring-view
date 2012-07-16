@@ -9,7 +9,7 @@
     <groupId>com.github.ericdwhite</groupId>
     <artifactId>mustache.java-spring-webmvc</artifactId>
     <packaging>jar</packaging>
-    <version>0.9.2-SNAPSHOT</version>
+    <version>0.9.3-SNAPSHOT</version>
     <name>mustache.java spring-webmvc view resolver</name>
     <description>A spring view for the mustache.java templating language https://github.com/spullara/mustache.java</description>
     <url>https://github.com/ericdwhite/mustache.java-spring-webmvc</url>

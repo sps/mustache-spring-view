@@ -52,6 +52,7 @@ public class MustacheViewTest {
 		
 		context.checking(new Expectations(){{
 			oneOf(response).setContentType(with(any(String.class)));
+			oneOf(response).setCharacterEncoding(with(any(String.class)));
 			oneOf(response).getWriter(); will(returnValue(writer));
 			oneOf(template).execute(writer, model);
 			oneOf(writer).flush();

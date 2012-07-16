@@ -35,6 +35,8 @@ import com.github.mustachejava.Mustache;
 public class MustacheView extends AbstractTemplateView {
 
     private Mustache template;
+    
+    private String encoding = EncodingUtil.getEncoding();
 
     @Override
     protected void renderMergedTemplateModel(Map<String, Object> model,
@@ -42,7 +44,7 @@ public class MustacheView extends AbstractTemplateView {
             HttpServletResponse response) throws Exception {
 
         response.setContentType(getContentType());
-        response.setCharacterEncoding("utf-8");
+        response.setCharacterEncoding(encoding);
         final Writer writer = response.getWriter();
         try {
             template.execute(writer, model);
