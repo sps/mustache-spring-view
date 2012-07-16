@@ -57,7 +57,7 @@ public class MustacheTemplateLoader extends DefaultMustacheFactory implements
         Resource resource = resourceLoader.getResource(resourceName);
         if (resource.exists()) {
             try {
-                return new InputStreamReader(resource.getInputStream());
+                return new InputStreamReader(resource.getInputStream(), "utf-8");
             } catch (IOException e) {
                 throw new MustacheException("Failed to load template: "
                         + resourceName, e);

@@ -42,6 +42,7 @@ public class MustacheView extends AbstractTemplateView {
             HttpServletResponse response) throws Exception {
 
         response.setContentType(getContentType());
+        response.setCharacterEncoding("utf-8");
         final Writer writer = response.getWriter();
         try {
             template.execute(writer, model);
