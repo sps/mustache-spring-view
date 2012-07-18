@@ -15,13 +15,21 @@
  */
 package org.springframework.web.servlet.view.mustache;
 
-public class EncodingUtil {
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
-	public static String getEncoding() {
-		String encoding = System.getProperty("mustache.template.encoding");
-		if( encoding!=null )
-			return encoding;
-		
-		return "UTF-8";
+import org.junit.Test;
+
+public class EncodingUtilTest {
+
+	@Test
+	public void utf8ShouldBeTheDefault() {
+		assertThat(EncodingUtil.getEncoding(), equalTo("UTF-8"));
+	}
+	
+	@Test
+	public void shouldBeAbleToSetTheEncoding() {
+		System.setProperty("mustache.template.encoding", "ISO-8859-1");
+		assertThat(EncodingUtil.getEncoding(), equalTo("ISO-8859-1"));
 	}
 }

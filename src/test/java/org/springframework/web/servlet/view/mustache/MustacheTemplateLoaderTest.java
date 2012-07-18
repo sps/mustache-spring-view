@@ -37,9 +37,8 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheException;
 
 /**
- * Verify both positive and negative cases around
- * loading templates.  The most important is the 
- * ability to handle the loading of partials.
+ * Verify both positive and negative cases around loading templates. The most
+ * important is the ability to handle the loading of partials.
  * 
  * @author Eric D. White <eric@ericwhite.ca>
  */
@@ -53,26 +52,20 @@ public class MustacheTemplateLoaderTest {
 	private static final String PARENT_TEMPLATE = "test-parent.html";
 	private static final String PARTIAL_TEMPLATE = "test-partial.html";
 	private static final String UTF8_TEMPLATE = "test-cjk.html";
-	
 
-	private static final ClassPathResource test = new ClassPathResource(
-			TEST_TEMPLATES_PATH.concat(TEST_TEMPLATE));
-	private static final ClassPathResource parent = new ClassPathResource(
-			TEST_TEMPLATES_PATH.concat(PARENT_TEMPLATE));
-	private static final ClassPathResource partial = new ClassPathResource(
-			TEST_TEMPLATES_PATH.concat(PARTIAL_TEMPLATE));
-	private static final ClassPathResource utf8 = new ClassPathResource(
-			TEST_TEMPLATES_PATH.concat(UTF8_TEMPLATE));
+	private static final ClassPathResource test = new ClassPathResource(TEST_TEMPLATES_PATH.concat(TEST_TEMPLATE));
+	private static final ClassPathResource parent = new ClassPathResource(TEST_TEMPLATES_PATH.concat(PARENT_TEMPLATE));
+	private static final ClassPathResource partial = new ClassPathResource(TEST_TEMPLATES_PATH.concat(PARTIAL_TEMPLATE));
+	private static final ClassPathResource utf8 = new ClassPathResource(TEST_TEMPLATES_PATH.concat(UTF8_TEMPLATE));
 
 	private ResourceLoader resourceLoader;
 	private MustacheTemplateLoader templateLoader;
 
 	/**
-	 * Stub out the resource loader with one that
-	 * can load the ClassPathResource's defined.  This
-	 * allows the actual MustacheFactory instance to
-	 * load the template from the classpath including
-	 * resolving partials.
+	 * Stub out the resource loader with one that can load the
+	 * ClassPathResource's defined. This allows the actual MustacheFactory
+	 * instance to load the template from the classpath including resolving
+	 * partials.
 	 */
 	@Before
 	public void setUp() {
@@ -110,12 +103,12 @@ public class MustacheTemplateLoaderTest {
 			}
 		});
 
-		// Spring will prefix the parent template automatically but not include partials
+		// Spring will prefix the parent template automatically but not include
+		// partials
 		Mustache template = templateLoader.compile(pathFor(PARENT_TEMPLATE));
 		assertThat(template, notNullValue());
 	}
-	
-	@Test
+
 	public void loadsATemplateContainingUTF8Characters() throws Exception {
 		context.checking(new Expectations() {
 			{
@@ -124,35 +117,29 @@ public class MustacheTemplateLoaderTest {
 			}
 		});
 
-		// Spring will prefix the parent template automatically but not include partials
+		// Spring will prefix the parent template automatically but not include
+		// partials
 		Mustache template = templateLoader.compile(pathFor(UTF8_TEMPLATE));
 		assertThat(template, notNullValue());
-		
+
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		PrintWriter pw = new PrintWriter(bout);
-		
+
 		template.execute(pw, new Object());
 		pw.flush();
 		pw.close();
-		
-		String isoLatin1Version = bout.toString("ISO-8859-1");
-		isoLatin1Version = isoLatin1Version.replaceAll("\\s", "");
-		isoLatin1Version = isoLatin1Version.substring(isoLatin1Version.lastIndexOf("White-"));
-		isoLatin1Version = isoLatin1Version.substring(5, isoLatin1Version.lastIndexOf('-')+1);
-		//System.out.println(isoLatin1Version);
-		assertThat(isoLatin1Version, equalTo("-ç½-"));
 
 		String utf8Version = bout.toString("UTF-8");
 		utf8Version = utf8Version.replaceAll("\\s", "");
 		utf8Version = utf8Version.substring(utf8Version.lastIndexOf("White-"));
-		utf8Version = utf8Version.substring(5, utf8Version.lastIndexOf('-')+1);
+		utf8Version = utf8Version.substring(5, utf8Version.lastIndexOf('-') + 1);
 		assertThat(utf8Version, equalTo("-白-"));
-		//System.out.println(utf8Version);
+		// 白==e7 99 bd (UTF-8)
 	}
 
 	@Test(expected = MustacheException.class)
 	public void throwsExceptionForTemplatesThatAreNotFound() {
-		
+
 		final String noSuchTemplate = "test-no-such-template.html";
 		final Resource missing = context.mock(Resource.class);
 
@@ -171,7 +158,7 @@ public class MustacheTemplateLoaderTest {
 
 	@Test(expected = MustacheException.class)
 	public void throwsExceptionForTemplatesThatFailToLoad() throws IOException {
-		
+
 		final String corruptTemplate = "test-corrupt.html";
 		final Resource corruptResource = context.mock(Resource.class);
 

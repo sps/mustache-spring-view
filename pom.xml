@@ -54,8 +54,9 @@
         <cglib.version>2.2.2</cglib.version>
 
         <skip.gpg>true</skip.gpg>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
-
 
     <build>
         <plugins>
@@ -192,6 +193,17 @@
                     </formats>
                 </configuration>
             </plugin>
+            <!--
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.12</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <inputEncoding>UTF-8</inputEncoding>
+                    <outputEncoding>UTF-8</outputEncoding>
+                </configuration>
+            </plugin>
+            -->
         </plugins>
     </reporting>
 </project>
