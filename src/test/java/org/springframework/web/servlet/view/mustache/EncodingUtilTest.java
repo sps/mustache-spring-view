@@ -31,5 +31,6 @@ public class EncodingUtilTest {
 	public void shouldBeAbleToSetTheEncoding() {
 		System.setProperty("mustache.template.encoding", "ISO-8859-1");
 		assertThat(EncodingUtil.getEncoding(), equalTo("ISO-8859-1"));
+		System.clearProperty("mustache.template.encoding");
 	}
 }

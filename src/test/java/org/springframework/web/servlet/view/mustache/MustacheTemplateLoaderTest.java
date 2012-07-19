@@ -109,6 +109,7 @@ public class MustacheTemplateLoaderTest {
 		assertThat(template, notNullValue());
 	}
 
+	@Test
 	public void loadsATemplateContainingUTF8Characters() throws Exception {
 		context.checking(new Expectations() {
 			{
