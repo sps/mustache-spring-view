@@ -16,12 +16,14 @@
 package org.springframework.web.servlet.view.mustache;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -126,15 +128,17 @@ public class MustacheTemplateLoaderTest {
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		PrintWriter pw = new PrintWriter(bout);
 
-		template.execute(pw, new Object());
+		Map<String, String> values = new HashMap<String, String>();
+		values.put("token", "白");
+		template.execute(pw, values);
 		pw.flush();
 		pw.close();
 
-		String utf8Version = bout.toString("UTF-8");
-		utf8Version = utf8Version.replaceAll("\\s", "");
-		utf8Version = utf8Version.substring(utf8Version.lastIndexOf("White-"));
-		utf8Version = utf8Version.substring(5, utf8Version.lastIndexOf('-') + 1);
-		assertThat(utf8Version, equalTo("-白-"));
+		String utf8HTML = bout.toString("UTF-8");
+		utf8HTML = utf8HTML.replaceAll("\\s", "");
+		utf8HTML = utf8HTML.substring(utf8HTML.lastIndexOf("White-"));
+		utf8HTML = utf8HTML.substring(5, utf8HTML.lastIndexOf('-') + 1);
+		assertThat(utf8HTML, equalTo("-白白-"));
 		// 白==e7 99 bd (UTF-8)
 	}
 
