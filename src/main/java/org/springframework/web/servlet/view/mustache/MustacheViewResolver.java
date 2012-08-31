@@ -60,6 +60,8 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
 
     @Override
     public void afterPropertiesSet() throws Exception {
+    	templateLoader.setPrefix(getPrefix());
+    	templateLoader.setSuffix(getSuffix());
         compiler = Mustache.compiler()
                 .escapeHTML(escapeHTML)
                 .standardsMode(standardsMode)
