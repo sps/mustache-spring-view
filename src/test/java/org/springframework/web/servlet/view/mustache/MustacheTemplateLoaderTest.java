@@ -15,13 +15,14 @@
  */
 package org.springframework.web.servlet.view.mustache;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.anyString;
 
 import java.io.FileNotFoundException;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -38,12 +39,14 @@ public class MustacheTemplateLoaderTest {
     private Resource resource;
     private ResourceLoader resourceLoader;
     private MustacheTemplateLoader loader;
+    private ArgumentCaptor<String> templateNameCaptor;
 
     @Before
     public void setUp() throws Exception {
+        templateNameCaptor = ArgumentCaptor.forClass(String.class);
         resource = Mockito.mock(Resource.class);
         resourceLoader = Mockito.mock(ResourceLoader.class);
-        Mockito.doReturn(resource).when(resourceLoader).getResource(anyString());
+        Mockito.doReturn(resource).when(resourceLoader).getResource(templateNameCaptor.capture());
 
         loader = new MustacheTemplateLoader();
         loader.setResourceLoader(resourceLoader);
@@ -52,17 +55,26 @@ public class MustacheTemplateLoaderTest {
     @Test(expected = FileNotFoundException.class)
     public void testResourceNotFound() throws Exception {
         Mockito.doReturn(Boolean.FALSE).when(resource).exists();
-        loader.getTemplate("");
+        loader.getTemplate("template.html");
+        assertEquals(templateNameCaptor.getValue(), "template.html");
     }
 
     @Test
     public void testResourceFound() throws Exception {
+
+        loader.setPrefix("prefix/");
+        loader.setSuffix(".suffix");
+
         Mockito.doReturn(Boolean.TRUE).when(resource).exists();
+
         Mockito.doReturn(TEST_TEMPLATE.getInputStream())
                 .when(resource)
                 .getInputStream();
+
         Mockito.doReturn(TEST_TEMPLATE.getFile()).when(resource).getFile();
-        assertNotNull(loader.getTemplate(""));
+
+        assertNotNull(loader.getTemplate("test_template"));
+        assertEquals(templateNameCaptor.getValue(), "prefix/test_template.suffix");
     }
 
 }
