@@ -22,3 +22,14 @@ spring config
             <bean class="org.springframework.web.servlet.view.mustache.MustacheTemplateLoader"" />
         </property>
     </bean>
+
+messages config
+---------------
+
+    <bean id="messageInterceptor" class="org.springframework.web.servlet.i18n.MustacheMessageInterceptor">
+        <property name="messageSource" ref="messageSource" />
+        <property name="localeResolver" ref="localeResolver" />
+        <!--<property name="messageKey" value="i18n"/> default is 'i18n'-->
+        <!--<property name="parseKey" value="true"/> default is 'false'-->
+        <!--<property name="viewResolver" ref="viewResolver"/> normally @Autowired-->
+    </bean>
