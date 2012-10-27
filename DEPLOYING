@@ -1,4 +1,4 @@
-= To Deploy to sonatype.org
+To Deploy to sonatype.org
 
- $ mvn deploy -Dskip.gpg=false
+ $ mvn deploy -Dskip.gpg=false -Dhttps.protocols=SSLv3 -Dforce.http.jre.executor=true
 
