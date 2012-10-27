@@ -17,6 +17,7 @@ package org.springframework.web.servlet.view.mustache;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 
 import org.junit.Test;
 
@@ -24,13 +25,19 @@ public class EncodingUtilTest {
 
 	@Test
 	public void utf8ShouldBeTheDefault() {
+		System.clearProperty("mustache.template.encoding");
 		assertThat(EncodingUtil.getEncoding(), equalTo("UTF-8"));
 	}
-	
+
 	@Test
 	public void shouldBeAbleToSetTheEncoding() {
 		System.setProperty("mustache.template.encoding", "ISO-8859-1");
 		assertThat(EncodingUtil.getEncoding(), equalTo("ISO-8859-1"));
 		System.clearProperty("mustache.template.encoding");
+	}
+
+	@Test
+	public void shouldHaveADefaultConstructor() {
+		assertThat(new EncodingUtil(), notNullValue());
 	}
 }

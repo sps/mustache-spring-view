@@ -15,6 +15,9 @@
  */
 package org.springframework.web.servlet.view.mustache;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+
 import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.Map;
@@ -36,30 +39,37 @@ import com.github.mustachejava.Mustache;
  */
 @RunWith(JMock.class)
 public class MustacheViewTest {
-	
-	private Mockery context = new Mockery(){{
-		setImposteriser(ClassImposteriser.INSTANCE);
-	}};
+
+	private final Mockery context = new Mockery() {
+		{
+			setImposteriser(ClassImposteriser.INSTANCE);
+		}
+	};
 
 	@Test
 	public void rendersAModelUsingItsTemplate() throws Exception {
 		final Map<String, Object> model = Collections.<String, Object> emptyMap();
-		
+
 		HttpServletRequest UNUSED_REQUEST = null;
 		final HttpServletResponse response = context.mock(HttpServletResponse.class);
 		final PrintWriter writer = context.mock(PrintWriter.class);
 		final Mustache template = context.mock(Mustache.class);
-		
-		context.checking(new Expectations(){{
-			oneOf(response).setContentType(with(any(String.class)));
-			oneOf(response).setCharacterEncoding(with(any(String.class)));
-			oneOf(response).getWriter(); will(returnValue(writer));
-			oneOf(template).execute(writer, model);
-			oneOf(writer).flush();
-		}});
-		
+
+		context.checking(new Expectations() {
+			{
+				oneOf(response).setContentType(with(any(String.class)));
+				oneOf(response).setCharacterEncoding(with(any(String.class)));
+				oneOf(response).getWriter();
+				will(returnValue(writer));
+				oneOf(template).execute(writer, model);
+				oneOf(writer).flush();
+			}
+		});
+
 		MustacheView view = new MustacheView();
 		view.setTemplate(template);
 		view.renderMergedTemplateModel(model, UNUSED_REQUEST, response);
+
+		assertThat(view.getTemplate(), equalTo(template));
 	}
 }
