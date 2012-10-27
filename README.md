@@ -23,7 +23,7 @@ Maven dependency
         <dependency>
             <groupId>com.github.ericdwhite</groupId>
 	        <artifactId>mustache.java-spring-webmvc</artifactId>
-            <version>0.9.2-SNAPSHOT</version>
+            <version>0.9.3-SNAPSHOT</version>
         </dependency>
         ...
     </dependencies>
