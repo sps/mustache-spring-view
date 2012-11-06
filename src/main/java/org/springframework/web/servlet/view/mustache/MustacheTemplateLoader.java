@@ -45,13 +45,16 @@ public class MustacheTemplateLoader implements TemplateLoader, ResourceLoaderAwa
 
     @Override
     public Reader getTemplate(String filename) throws Exception {
-        if (!filename.startsWith(prefix)) {
-            filename = prefix + filename;
-        }
-        if (!filename.endsWith(suffix)) {
-            filename = filename + suffix;
-        }
         Resource resource = resourceLoader.getResource(filename);
+        if (!resource.exists()) {
+            if (!filename.startsWith(prefix)) {
+                filename = prefix + filename;
+            }
+            if (!filename.endsWith(suffix)) {
+                filename = filename + suffix;
+            }
+            resource = resourceLoader.getResource(filename);
+        }
         if (resource.exists()) {
             return new InputStreamReader(resource.getInputStream());
         }
