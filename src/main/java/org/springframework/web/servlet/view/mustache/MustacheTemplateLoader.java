@@ -43,7 +43,6 @@ public class MustacheTemplateLoader implements TemplateLoader, ResourceLoaderAwa
         this.suffix = suffix;
     }
 
-    @Override
     public Reader getTemplate(String filename) throws Exception {
         if (!filename.startsWith(prefix)) {
             filename = prefix + filename;
@@ -58,7 +57,6 @@ public class MustacheTemplateLoader implements TemplateLoader, ResourceLoaderAwa
         throw new FileNotFoundException(filename);
     }
 
-    @Override
     public void setResourceLoader(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
     }

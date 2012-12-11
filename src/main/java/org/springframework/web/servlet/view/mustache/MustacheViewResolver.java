@@ -58,7 +58,6 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
         return view;
     }
 
-    @Override
     public void afterPropertiesSet() throws Exception {
     	templateLoader.setPrefix(getPrefix());
     	templateLoader.setSuffix(getSuffix());
