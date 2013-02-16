@@ -90,4 +90,8 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
         this.escapeHTML = escapeHTML;
     }
 
+	public Compiler getCompiler() {
+		return compiler;
+	}
+
 }
