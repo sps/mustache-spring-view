@@ -34,74 +34,76 @@ import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 
 /**
- * Spring Interceptor to add a model attribute, so a Mustache template can
- * access the Spring MessageSource for localized messages.
+ * Spring Interceptor to add a model attribute, so a Mustache template can access the Spring
+ * MessageSource for localized messages.
  * 
  * e.g. {{#i18n}}labels.global.mustache{{/i18n}}
  */
-public class MustacheMessageInterceptor extends HandlerInterceptorAdapter implements MessageSourceAware {
+public class MustacheMessageInterceptor extends HandlerInterceptorAdapter implements
+        MessageSourceAware {
 
-	/**
-	 * Default key to be used in message templates.
-	 * 
-	 * e.g. {{i18n}}internationalize.this.key.please{{/i18n}}
-	 */
-	private static final String DEFAULT_MODEL_KEY = "i18n";
+    /**
+     * Default key to be used in message templates.
+     * 
+     * e.g. {{i18n}}internationalize.this.key.please{{/i18n}}
+     */
+    private static final String DEFAULT_MODEL_KEY = "i18n";
 
-	/** No support for message args, namely {0}, {1}, etc. */
-	private static final Object[] NO_MESSAGE_ARGS = null;
+    /** No support for message args, namely {0}, {1}, etc. */
+    private static final Object[] NO_MESSAGE_ARGS = null;
 
-	private String messageKey = DEFAULT_MODEL_KEY;
+    private String messageKey = DEFAULT_MODEL_KEY;
 
-	private MessageSource messageSource;
-	private LocaleResolver localeResolver;
+    private MessageSource messageSource;
+    private LocaleResolver localeResolver;
 
-	@Autowired
-	private MustacheViewResolver viewResolver;
+    @Autowired
+    private MustacheViewResolver viewResolver;
 
-	@Override
-	public void postHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler,
-			final ModelAndView modelAndView) throws Exception {
+    @Override
+    public void postHandle(final HttpServletRequest request, final HttpServletResponse response,
+            final Object handler,
+            final ModelAndView modelAndView) throws Exception {
 
-		if (modelAndView != null) {
-			modelAndView.addObject(messageKey, new Mustache.Lambda() {
-				public void execute(Template.Fragment frag, Writer out) throws IOException {
-					final Locale locale = localeResolver.resolveLocale(request);
-					final String key = frag.execute();
-					final String text = messageSource.getMessage(key, NO_MESSAGE_ARGS, locale);
-					out.write(text);
-				}
-			});
-		}
+        if (modelAndView != null) {
+            modelAndView.addObject(messageKey, new Mustache.Lambda() {
+                public void execute(Template.Fragment frag, Writer out) throws IOException {
+                    final Locale locale = localeResolver.resolveLocale(request);
+                    final String key = frag.execute();
+                    final String text = messageSource.getMessage(key, NO_MESSAGE_ARGS, locale);
+                    out.write(text);
+                }
+            });
+        }
 
-		super.postHandle(request, response, handler, modelAndView);
-	}
+        super.postHandle(request, response, handler, modelAndView);
+    }
 
-	/**
-	 * Define custom key to access i18n messages in your Mustache template.
-	 * 
-	 * @param messageKey
-	 *            the key used in the template. For example if the messageKey is
-	 *            'label' then in the template you would use:
-	 * 
-	 *            {{#label}}labels.global.mustache{{/label}}
-	 * 
-	 *            The default messageKey is 'i18n'
-	 */
-	public void setMessageKey(String messageKey) {
-		this.messageKey = messageKey;
-	}
+    /**
+     * Define custom key to access i18n messages in your Mustache template.
+     * 
+     * @param messageKey
+     *        the key used in the template. For example if the messageKey is 'label' then in the
+     *        template you would use:
+     * 
+     *        {{#label}}labels.global.mustache{{/label}}
+     * 
+     *        The default messageKey is 'i18n'
+     */
+    public void setMessageKey(String messageKey) {
+        this.messageKey = messageKey;
+    }
 
-	public void setMessageSource(MessageSource messageSource) {
-		this.messageSource = messageSource;
-	}
+    public void setMessageSource(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
-	public void setLocaleResolver(LocaleResolver localeResolver) {
-		this.localeResolver = localeResolver;
-	}
+    public void setLocaleResolver(LocaleResolver localeResolver) {
+        this.localeResolver = localeResolver;
+    }
 
-	public void setViewResolver(MustacheViewResolver viewResolver) {
-		this.viewResolver = viewResolver;
-	}
+    public void setViewResolver(MustacheViewResolver viewResolver) {
+        this.viewResolver = viewResolver;
+    }
 
 }
