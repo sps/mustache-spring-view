@@ -39,11 +39,8 @@ public class MustacheView extends AbstractTemplateView {
 
         response.setContentType(getContentType());
         final Writer writer = response.getWriter();
-        try {
-            template.execute(model, writer);
-        } finally {
-            writer.flush();
-        }
+        template.execute(model, writer);
+        writer.flush();
     }
 
     public void setTemplate(Template template) {
