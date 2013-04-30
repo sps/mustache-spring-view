@@ -33,7 +33,7 @@
     </developers>
     <properties>
         <org.springframework.version>3.1.2.RELEASE</org.springframework.version>
-        <jmustache.version>1.7-SNAPSHOT</jmustache.version> 
+        <jmustache.version>1.8</jmustache.version> 
         <mockito.version>1.8.5</mockito.version>
         <junit.version>4.8.2</junit.version>
         <jdk.version>1.5</jdk.version>
