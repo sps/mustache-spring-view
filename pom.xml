@@ -1,16 +1,19 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
         <version>7</version>
     </parent>
     <groupId>com.github.sps.mustache</groupId>
-	<artifactId>mustache-spring-view</artifactId>
-	<packaging>jar</packaging>
-	<version>1.1.2-SNAPSHOT</version>
-	<name>mustache spring view</name>
-    <description>a spring view for the mustache templating language http://mustache.github.com/</description>
+    <artifactId>mustache-spring-view</artifactId>
+    <packaging>jar</packaging>
+    <version>1.1.2-SNAPSHOT</version>
+    <name>mustache spring view</name>
+    <description>a spring view for the mustache templating language http://mustache.github.com/
+    </description>
     <url>http://github.com/sps/mustache-spring-view</url>
     <licenses>
         <license>
@@ -22,7 +25,8 @@
     <scm>
         <url>http://github.com/sps/mustache-spring-view</url>
         <connection>scm:git:git@github.com:sps/mustache-spring-view.git</connection>
-        <developerConnection>scm:git:git@github.com:sps/mustache-spring-view.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:sps/mustache-spring-view.git
+        </developerConnection>
     </scm>
     <developers>
         <developer>
@@ -33,21 +37,21 @@
     </developers>
     <properties>
         <org.springframework.version>3.1.2.RELEASE</org.springframework.version>
-        <jmustache.version>1.8</jmustache.version> 
+        <jmustache.version>1.8</jmustache.version>
         <mockito.version>1.8.5</mockito.version>
         <junit.version>4.8.2</junit.version>
         <jdk.version>1.5</jdk.version>
     </properties>
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
-				<configuration>
+                <configuration>
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
-				</configuration>
-			</plugin>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
@@ -72,9 +76,9 @@
                     </execution>
                 </executions>
             </plugin>
-		</plugins>
-	</build>
-	<dependencies>
+        </plugins>
+    </build>
+    <dependencies>
 
         <dependency>
             <groupId>com.samskivert</groupId>
@@ -86,7 +90,38 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${org.springframework.version}</version>
+            <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${org.springframework.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${org.springframework.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${org.springframework.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${org.springframework.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
 
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -95,12 +130,12 @@
             <scope>provided</scope>
         </dependency>
 
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
             <version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
@@ -109,5 +144,5 @@
             <scope>test</scope>
         </dependency>
 
-	</dependencies>
+    </dependencies>
 </project>
