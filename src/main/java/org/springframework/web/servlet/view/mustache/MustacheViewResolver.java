@@ -38,6 +38,7 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
     private boolean standardsMode = false;
     private boolean escapeHTML = true;
     private String nullValue = null;
+    private boolean emptyStringIsFalse = false;
 
     public MustacheViewResolver() {
         setViewClass(MustacheView.class);
@@ -65,6 +66,7 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
         compiler = Mustache.compiler()
                 .escapeHTML(escapeHTML)
                 .nullValue(nullValue)
+                .emptyStringIsFalse(emptyStringIsFalse)
                 .standardsMode(standardsMode)
                 .withLoader(templateLoader);
     }
@@ -99,5 +101,14 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
      */
     public void setNullValue(String nullValue) {
         this.nullValue = nullValue;
+    }
+
+    /**
+     * If set to true, then treats empty strings as a false value
+     *
+     * default is false
+     */
+    public void setEmptyStringIsFalse(String emptyStringIsFalse) {
+        this.emptyStringIsFalse = emptyStringIsFalse;
     }
 }
