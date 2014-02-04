@@ -108,7 +108,7 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
      *
      * default is false
      */
-    public void setEmptyStringIsFalse(String emptyStringIsFalse) {
+    public void setEmptyStringIsFalse(boolean emptyStringIsFalse) {
         this.emptyStringIsFalse = emptyStringIsFalse;
     }
 }
