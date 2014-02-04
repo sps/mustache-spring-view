@@ -37,6 +37,8 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
 
     private boolean standardsMode = false;
     private boolean escapeHTML = true;
+    private String nullValue = null;
+    private boolean emptyStringIsFalse = false;
 
     public MustacheViewResolver() {
         setViewClass(MustacheView.class);
@@ -63,6 +65,8 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
     	templateLoader.setSuffix(getSuffix());
         compiler = Mustache.compiler()
                 .escapeHTML(escapeHTML)
+                .nullValue(nullValue)
+                .emptyStringIsFalse(emptyStringIsFalse)
                 .standardsMode(standardsMode)
                 .withLoader(templateLoader);
     }
@@ -90,4 +94,21 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
         this.escapeHTML = escapeHTML;
     }
 
+    /**
+     * A value to use when use when a variable resolves to null.
+     *
+     * default is null
+     */
+    public void setNullValue(String nullValue) {
+        this.nullValue = nullValue;
+    }
+
+    /**
+     * If set to true, then treats empty strings as a false value
+     *
+     * default is false
+     */
+    public void setEmptyStringIsFalse(boolean emptyStringIsFalse) {
+        this.emptyStringIsFalse = emptyStringIsFalse;
+    }
 }
