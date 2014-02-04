@@ -42,6 +42,8 @@ public class MustacheViewResolverTest {
         viewResolver.setTemplateLoader(templateLoader);
         viewResolver.setStandardsMode(false);
         viewResolver.setEscapeHTML(true);
+        viewResolver.setNullValue("");
+        viewResolver.setEmptyStringIsFalse(true);
         viewResolver.afterPropertiesSet();
 
     }
