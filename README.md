@@ -25,6 +25,14 @@ spring config
         </property>
     </bean>
 
+The default Mustache.Compiler configuration is as follows. You can inject your own custom Compiler as instructed below.
+
+    compiler = Mustache.compiler()
+                    .escapeHTML(escapeHTML)
+                    .standardsMode(standardsMode)
+                    .withLoader(templateLoader);
+
+
 messages config
 ---------------
 
