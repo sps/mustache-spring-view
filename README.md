@@ -34,3 +34,35 @@ messages config
         <!--<property name="messageKey" value="i18n"/> default is 'i18n'-->
         <!--<property name="viewResolver" ref="viewResolver"/> normally @Autowired-->
     </bean>
+
+## Optionally Inject Custom Mustache.Compiler
+
+spring config with custom compiler
+----------------------------------
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.mustache.MustacheViewResolver">
+        <property name="cache" value="${TEMPLATE_CACHE_ENABLED}" />
+        <property name="prefix" value="" />
+        <property name="suffix" value=".html" />
+        <property name="templateLoader" ref="templateLoader"/>
+        <property name="compiler">
+            <bean class="your.package.name.CustomMustacheCompiler" factory-method="yourFactoryMethodName">
+                <constructor-arg ref="templateLoader"/>
+            </bean>
+        </property>
+    </bean>
+
+custom compiler
+---------------
+    public class CustomMustacheCompiler {
+        private CustomMustacheCompiler() {}
+
+        public static Mustache.Compiler yourFactoryMethodName(MustacheTemplateLoader templateLoader) {
+            // customize your compiler as needed
+            return Mustache.compiler()
+                    .escapeHTML(true)
+                    .standardsMode(false)
+                    .defaultValue("")
+                    .withLoader(templateLoader);
+        }
+    }

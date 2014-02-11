@@ -19,6 +19,8 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.StringReader;
 
+import com.samskivert.mustache.Mustache;
+import com.samskivert.mustache.Template;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -42,8 +44,6 @@ public class MustacheViewResolverTest {
         viewResolver.setTemplateLoader(templateLoader);
         viewResolver.setStandardsMode(false);
         viewResolver.setEscapeHTML(true);
-        viewResolver.setNullValue("");
-        viewResolver.setEmptyStringIsFalse(true);
         viewResolver.afterPropertiesSet();
 
     }
@@ -52,5 +52,24 @@ public class MustacheViewResolverTest {
     public void testBuildView() throws Exception {
         Mockito.doReturn(new StringReader("")).when(templateLoader).getTemplate(viewName);
         assertNotNull(viewResolver.buildView(viewName));
+    }
+
+    @Test
+    public void testWithCustomCompiler() throws Exception {
+        final Mustache.Compiler customCompiler = Mockito.mock(Mustache.Compiler.class);
+
+        viewResolver = new MustacheViewResolver();
+        viewResolver.setTemplateLoader(templateLoader);
+        viewResolver.setStandardsMode(false);
+        viewResolver.setEscapeHTML(true);
+        viewResolver.setCompiler(customCompiler);
+        viewResolver.afterPropertiesSet();
+
+        Mockito.doReturn(new StringReader("")).when(templateLoader).getTemplate(viewName);
+        Mockito.when(customCompiler.compile(Mockito.any(StringReader.class))).thenReturn(Mockito.mock(Template.class));
+
+        viewResolver.buildView(viewName);
+
+        Mockito.verify(customCompiler).compile(Mockito.any(StringReader.class));
     }
 }
