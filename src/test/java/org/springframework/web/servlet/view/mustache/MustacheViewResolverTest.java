@@ -56,6 +56,7 @@ public class MustacheViewResolverTest {
 
     @Test
     public void testWithCustomCompiler() throws Exception {
+        final Template template = Mockito.mock(Template.class);
         final Mustache.Compiler customCompiler = Mockito.mock(Mustache.Compiler.class);
 
         viewResolver = new MustacheViewResolver();
@@ -66,7 +67,7 @@ public class MustacheViewResolverTest {
         viewResolver.afterPropertiesSet();
 
         Mockito.doReturn(new StringReader("")).when(templateLoader).getTemplate(viewName);
-        Mockito.when(customCompiler.compile(Mockito.any(StringReader.class))).thenReturn(Mockito.mock(Template.class));
+        Mockito.when(customCompiler.compile(Mockito.any(StringReader.class))).thenReturn(template);
 
         viewResolver.buildView(viewName);
 
