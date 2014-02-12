@@ -33,12 +33,10 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
         InitializingBean {
 
     private MustacheTemplateLoader templateLoader;
-    private Compiler compiler;
+    private Compiler compiler = null;
 
     private boolean standardsMode = false;
     private boolean escapeHTML = true;
-    private String nullValue = null;
-    private boolean emptyStringIsFalse = false;
 
     public MustacheViewResolver() {
         setViewClass(MustacheView.class);
@@ -63,12 +61,12 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
     public void afterPropertiesSet() throws Exception {
     	templateLoader.setPrefix(getPrefix());
     	templateLoader.setSuffix(getSuffix());
-        compiler = Mustache.compiler()
-                .escapeHTML(escapeHTML)
-                .nullValue(nullValue)
-                .emptyStringIsFalse(emptyStringIsFalse)
-                .standardsMode(standardsMode)
-                .withLoader(templateLoader);
+        if (compiler == null) {
+            compiler = Mustache.compiler()
+                    .escapeHTML(escapeHTML)
+                    .standardsMode(standardsMode)
+                    .withLoader(templateLoader);
+        }
     }
 
     @Required
@@ -95,20 +93,12 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
     }
 
     /**
-     * A value to use when use when a variable resolves to null.
+     * You can inject your own custom configured compiler. If you don't inject one then a default one will be created
+     * for you instead using the standardsMode, escapeHTML, and templateLoader values you've injected.
      *
-     * default is null
+     * @param compiler
      */
-    public void setNullValue(String nullValue) {
-        this.nullValue = nullValue;
-    }
-
-    /**
-     * If set to true, then treats empty strings as a false value
-     *
-     * default is false
-     */
-    public void setEmptyStringIsFalse(boolean emptyStringIsFalse) {
-        this.emptyStringIsFalse = emptyStringIsFalse;
+    public void setCompiler(Compiler compiler) {
+        this.compiler = compiler;
     }
 }
