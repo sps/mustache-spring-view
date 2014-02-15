@@ -1,7 +1,8 @@
 [mustache.js](http://mustache.github.com/mustache.5.html) view for [spring3](http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/mvc.html)
----------------------------
+============================================================================
 
 [![Build Status](https://travis-ci.org/sps/mustache-spring-view.png?branch=master)](https://travis-ci.org/sps/mustache-spring-view)
+[![Coverage Status](https://coveralls.io/repos/sps/mustache-spring-view/badge.png?branch=master)](https://coveralls.io/r/sps/mustache-spring-view?branch=master)
 
 maven dependency
 -----------------
