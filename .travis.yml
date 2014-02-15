@@ -2,8 +2,12 @@ language: java
 
 install: echo "I trust Maven."
 
+env:
+  global:
+    - secure: "mtH7DQM1tRPkb7CjJ/iiy+IkAQaDFw/41pZji6LXPe7jrMuu3+u0mq0odS1IO8/xdace0GE2OLa+5aBdFpKajWVTciaHuyPXqWRERQ+ZbO2XXngINOgJ0TIJ+poD10IZCjRXsmNm4ahv8MiEOqPtbFd1XnYfVGjU8dU84kCPUXg="
+
 # don't just run the tests, also run Findbugs and friends
-script: mvn verify
+script: mvn verify coveralls:jacoco
 
 jdk:
   - oraclejdk7
