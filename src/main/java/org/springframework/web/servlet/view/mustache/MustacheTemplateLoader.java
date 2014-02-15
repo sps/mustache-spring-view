@@ -15,24 +15,25 @@
  */
 package org.springframework.web.servlet.view.mustache;
 
-import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-
+import com.samskivert.mustache.Mustache.TemplateLoader;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
-import com.samskivert.mustache.Mustache.TemplateLoader;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.Charset;
 
 /**
  * @author Sean Scanlon <sean.scanlon@gmail.com>
- * 
  */
 public class MustacheTemplateLoader implements TemplateLoader, ResourceLoaderAware {
 
     private ResourceLoader resourceLoader;
+
     private String prefix = "";
+
     private String suffix = "";
 
     public void setPrefix(String prefix) {
@@ -52,7 +53,8 @@ public class MustacheTemplateLoader implements TemplateLoader, ResourceLoaderAwa
         }
         Resource resource = resourceLoader.getResource(filename);
         if (resource.exists()) {
-            return new InputStreamReader(resource.getInputStream());
+            // rely on jvm encoding (-Dfile.encoding=...)
+            return new InputStreamReader(resource.getInputStream(), Charset.defaultCharset());
         }
         throw new FileNotFoundException(filename);
     }
