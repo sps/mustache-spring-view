@@ -36,10 +36,10 @@
         </developer>
     </developers>
     <properties>
-        <org.springframework.version>3.1.2.RELEASE</org.springframework.version>
-        <jmustache.version>1.8</jmustache.version>
-        <mockito.version>1.8.5</mockito.version>
-        <junit.version>4.8.2</junit.version>
+        <org.springframework.version>4.0.3.RELEASE</org.springframework.version>
+        <jmustache.version>1.9</jmustache.version>
+        <mockito.version>1.9.0</mockito.version>
+        <junit.version>4.11</junit.version>
         <jdk.version>1.5</jdk.version>
     </properties>
     <build>
@@ -90,7 +90,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.6.4.201312101107</version>
+                <version>0.7.0.201403182114</version>
                 <executions>
                     <execution>
                         <id>default-prepare-agent</id>
@@ -203,6 +203,12 @@
             <artifactId>mockito-core</artifactId>
             <version>${mockito.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hamcrest</groupId>
+                    <artifactId>hamcrest-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>
