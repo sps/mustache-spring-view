@@ -15,11 +15,16 @@
  */
 package org.springframework.web.servlet.view.mustache;
 
+import java.io.FileNotFoundException;
+import java.util.Locale;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.AbstractTemplateViewResolver;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
+import org.springframework.web.servlet.view.AbstractView;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
@@ -51,11 +56,14 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
     protected AbstractUrlBasedView buildView(String viewName) throws Exception {
 
         final MustacheView view = (MustacheView) super.buildView(viewName);
-
-        Template template = compiler.compile(templateLoader.getTemplate(view.getUrl()));
-        view.setTemplate(template);
-
-        return view;
+		try {
+			Template template = compiler.compile(templateLoader
+					.getTemplate(view.getUrl()));
+			view.setTemplate(template);
+			return view;
+		} catch (FileNotFoundException e) {
+			return null;
+		}
     }
 
     public void afterPropertiesSet() throws Exception {
@@ -91,6 +99,21 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
     public void setEscapeHTML(boolean escapeHTML) {
         this.escapeHTML = escapeHTML;
     }
+    
+	@Override
+	protected View loadView(String viewName, Locale locale) throws Exception {
+		AbstractUrlBasedView view = buildView(viewName);
+		if (view == null) {
+			return null;
+		}
+		View result = applyLifecycleMethods(viewName, view);
+		return (view.checkResource(locale) ? result : null);
+	}
+
+	private View applyLifecycleMethods(String viewName, AbstractView view) {
+		return (View) getApplicationContext().getAutowireCapableBeanFactory()
+				.initializeBean(view, viewName);
+	}
 
     /**
      * You can inject your own custom configured compiler. If you don't inject one then a default one will be created
