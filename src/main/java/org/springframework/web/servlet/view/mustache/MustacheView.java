@@ -15,27 +15,24 @@
  */
 package org.springframework.web.servlet.view.mustache;
 
-import java.io.Writer;
-import java.util.Map;
+import com.samskivert.mustache.Template;
+import org.springframework.web.servlet.view.AbstractTemplateView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.web.servlet.view.AbstractTemplateView;
-
-import com.samskivert.mustache.Template;
+import java.io.Writer;
+import java.util.Map;
 
 /**
  * @author Sean Scanlon <sean.scanlon@gmail.com>
- * 
  */
 public class MustacheView extends AbstractTemplateView {
 
-    private Template template;
+    private MustacheTemplate template;
 
     @Override
     protected void renderMergedTemplateModel(Map<String, Object> model, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+                                             HttpServletResponse response) throws Exception {
 
         response.setContentType(getContentType());
         final Writer writer = response.getWriter();
@@ -43,11 +40,11 @@ public class MustacheView extends AbstractTemplateView {
         writer.flush();
     }
 
-    public void setTemplate(Template template) {
+    public void setTemplate(MustacheTemplate template) {
         this.template = template;
     }
 
-    public Template getTemplate() {
+    public MustacheTemplate getTemplate() {
         return template;
     }
 }

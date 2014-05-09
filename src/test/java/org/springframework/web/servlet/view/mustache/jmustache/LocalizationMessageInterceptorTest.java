@@ -1,42 +1,36 @@
 /**
- * 
+ *
  */
-package org.springframework.web.servlet.i18n;
+package org.springframework.web.servlet.view.mustache.jmustache;
 
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.io.Writer;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.samskivert.mustache.Mustache;
+import com.samskivert.mustache.Mustache.Lambda;
+import com.samskivert.mustache.Template;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.context.MessageSource;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.mustache.MustacheViewResolver;
 
-import com.samskivert.mustache.Mustache;
-import com.samskivert.mustache.Mustache.Lambda;
-import com.samskivert.mustache.Template;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.Writer;
+import java.util.Locale;
+
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Sean Scanlon <sean.scanlon@gmail.com>
  */
-public class MustacheMessageInterceptorTest {
+public class LocalizationMessageInterceptorTest {
 
     private MessageSource messageSource;
     private LocaleResolver localeResolver;
-    private MustacheViewResolver viewResolver;
 
-    private MustacheMessageInterceptor interceptor;
+    private LocalizationMessageInterceptor interceptor;
     private HttpServletRequest request;
     private HttpServletResponse response;
 
@@ -50,10 +44,9 @@ public class MustacheMessageInterceptorTest {
         response = mock(HttpServletResponse.class);
         localeResolver = mock(LocaleResolver.class);
         messageSource = mock(MessageSource.class);
-        interceptor = new MustacheMessageInterceptor();
+        interceptor = new LocalizationMessageInterceptor();
         interceptor.setLocaleResolver(localeResolver);
         interceptor.setMessageSource(messageSource);
-        interceptor.setViewResolver(viewResolver);
         interceptor.setMessageKey(messageKey);
     }
 
@@ -78,13 +71,22 @@ public class MustacheMessageInterceptorTest {
         final Template.Fragment frag = mock(Template.Fragment.class);
         final Writer out = mock(Writer.class);
         final String fragResult = "bar";
+        final String fragResultWithArgs = "bar  [foo] [baz][burp]";
 
         when(frag.execute()).thenReturn(fragResult);
         when(localeResolver.resolveLocale(request)).thenReturn(Locale.CANADA_FRENCH);
 
         lambda.execute(frag, out);
 
-        verify(messageSource).getMessage(fragResult, null, Locale.CANADA_FRENCH);
+        verify(messageSource, times(1)).getMessage(fragResult, new Object[]{}, Locale.CANADA_FRENCH);
+
+        // exercise the optional args passing:
+        when(frag.execute()).thenReturn(fragResultWithArgs);
+        lambda.execute(frag, out);
+
+        verify(messageSource, times(1)).getMessage(fragResult, new Object[]{"foo", "baz", "burp"}, Locale.CANADA_FRENCH);
+
+        verifyNoMoreInteractions(messageSource);
 
     }
 }

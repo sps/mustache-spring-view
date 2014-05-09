@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2014 the original author or authors.
+ * Copyright 2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,48 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.web.servlet.view.mustache;
+package org.springframework.web.servlet.view.mustache.jmustache;
 
+import com.samskivert.mustache.Template;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.doReturn;
+import java.io.Writer;
+
 import static org.mockito.Mockito.verify;
 
-/**
- * @author Sean Scanlon <sean.scanlon@gmail.com>
- */
 @RunWith(MockitoJUnitRunner.class)
-public class MustacheViewResolverTest {
-
-    private MustacheViewResolver viewResolver;
+public class JMustacheTemplateTest {
 
     @Mock
-    private MustacheTemplateFactory templateFactory;
+    private Template mockTemplate;
 
     @Mock
-    private MustacheTemplate template;
+    private Object context;
 
-    private final String viewName = "viewName";
+    @Mock
+    private Writer out;
+
+    private JMustacheTemplate template;
 
     @Before
     public void setUp() throws Exception {
-        viewResolver = new MustacheViewResolver();
-        viewResolver.setTemplateFactory(templateFactory);
+        template = new JMustacheTemplate(mockTemplate);
     }
 
     @Test
-    public void testBuildView() throws Exception {
-
-        doReturn(template).when(templateFactory).getTemplate(viewName);
-
-        assertNotNull(viewResolver.buildView(viewName));
-
-        verify(templateFactory).getTemplate(viewName);
+    public void testExecute() throws Exception {
+        template.execute(context, out);
+        verify(mockTemplate).execute(context, out);
     }
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 the original author or authors.
+ * Copyright 2011-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +15,17 @@
  */
 package org.springframework.web.servlet.view.mustache;
 
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.AbstractTemplateViewResolver;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
 
-import com.samskivert.mustache.Mustache;
-import com.samskivert.mustache.Template;
-import com.samskivert.mustache.Mustache.Compiler;
-
 /**
  * @author Sean Scanlon <sean.scanlon@gmail.com>
- * 
  */
-public class MustacheViewResolver extends AbstractTemplateViewResolver implements ViewResolver,
-        InitializingBean {
+public class MustacheViewResolver extends AbstractTemplateViewResolver implements ViewResolver {
 
-    private MustacheTemplateLoader templateLoader;
-    private Compiler compiler = null;
-
-    private boolean standardsMode = false;
-    private boolean escapeHTML = true;
+    private MustacheTemplateFactory templateFactory;
 
     public MustacheViewResolver() {
         setViewClass(MustacheView.class);
@@ -52,53 +41,14 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
 
         final MustacheView view = (MustacheView) super.buildView(viewName);
 
-        Template template = compiler.compile(templateLoader.getTemplate(view.getUrl()));
+        final MustacheTemplate template = templateFactory.getTemplate(view.getUrl());
         view.setTemplate(template);
 
         return view;
     }
 
-    public void afterPropertiesSet() throws Exception {
-    	templateLoader.setPrefix(getPrefix());
-    	templateLoader.setSuffix(getSuffix());
-        if (compiler == null) {
-            compiler = Mustache.compiler()
-                    .escapeHTML(escapeHTML)
-                    .standardsMode(standardsMode)
-                    .withLoader(templateLoader);
-        }
-    }
-
     @Required
-    public void setTemplateLoader(MustacheTemplateLoader templateLoader) {
-        this.templateLoader = templateLoader;
-    }
-
-    /**
-     * Whether or not standards mode is enabled.
-     * 
-     * disabled by default.
-     */
-    public void setStandardsMode(boolean standardsMode) {
-        this.standardsMode = standardsMode;
-    }
-
-    /**
-     * Whether or not HTML entities are escaped by default.
-     * 
-     * default is true.
-     */
-    public void setEscapeHTML(boolean escapeHTML) {
-        this.escapeHTML = escapeHTML;
-    }
-
-    /**
-     * You can inject your own custom configured compiler. If you don't inject one then a default one will be created
-     * for you instead using the standardsMode, escapeHTML, and templateLoader values you've injected.
-     *
-     * @param compiler
-     */
-    public void setCompiler(Compiler compiler) {
-        this.compiler = compiler;
+    public void setTemplateFactory(MustacheTemplateFactory templateFactory) {
+        this.templateFactory = templateFactory;
     }
 }
