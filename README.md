@@ -11,7 +11,7 @@ Maven Dependency
     <dependency>
         <groupId>com.github.sps.mustache</groupId>
         <artifactId>mustache-spring-view</artifactId>
-        <version>1.2</version>
+        <version>1.3</version>
     </dependency>
 
     <!-- jmustache -->
