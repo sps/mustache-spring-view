@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 the original author or authors.
+ * Copyright 2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.web.servlet.view.mustache;
+package org.springframework.web.servlet.view.mustache.jmustache;
 
-import com.samskivert.mustache.Mustache.TemplateLoader;
+import com.samskivert.mustache.Mustache;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -25,10 +25,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
 
-/**
- * @author Sean Scanlon <sean.scanlon@gmail.com>
- */
-public class MustacheTemplateLoader implements TemplateLoader, ResourceLoaderAware {
+public class JMustacheTemplateLoader implements Mustache.TemplateLoader, ResourceLoaderAware {
 
     private ResourceLoader resourceLoader;
 
@@ -59,8 +56,8 @@ public class MustacheTemplateLoader implements TemplateLoader, ResourceLoaderAwa
         throw new FileNotFoundException(filename);
     }
 
+
     public void setResourceLoader(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
     }
-
 }

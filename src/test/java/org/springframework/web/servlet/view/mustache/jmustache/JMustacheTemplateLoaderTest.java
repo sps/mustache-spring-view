@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.web.servlet.view.mustache;
+package org.springframework.web.servlet.view.mustache.jmustache;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -31,14 +31,14 @@ import org.springframework.core.io.ResourceLoader;
 /**
  * @author Sean Scanlon <sean.scanlon@gmail.com>
  */
-public class MustacheTemplateLoaderTest {
+public class JMustacheTemplateLoaderTest {
 
-    private static final ClassPathResource TEST_TEMPLATE = new ClassPathResource("test-template.html",
-            MustacheTemplateLoaderTest.class);
+    private static final ClassPathResource TEST_TEMPLATE = new ClassPathResource("/test-template.html",
+            JMustacheTemplateLoaderTest.class);
 
     private Resource resource;
     private ResourceLoader resourceLoader;
-    private MustacheTemplateLoader loader;
+    private JMustacheTemplateLoader loader;
     private ArgumentCaptor<String> templateNameCaptor;
 
     @Before
@@ -48,7 +48,7 @@ public class MustacheTemplateLoaderTest {
         resourceLoader = Mockito.mock(ResourceLoader.class);
         Mockito.doReturn(resource).when(resourceLoader).getResource(templateNameCaptor.capture());
 
-        loader = new MustacheTemplateLoader();
+        loader = new JMustacheTemplateLoader();
         loader.setResourceLoader(resourceLoader);
     }
 
