@@ -2,9 +2,9 @@ language: java
 
 install: echo "I trust Maven."
 
-env:
-  global:
-    - secure: "Th3n6AmSSw5jkrkz77TW/YtCdOJ1bQDtDaDFmBUpSAnM2+PHnPnPl2yqtaPlYV5qV+0bTpQNqQ/mGuHHDYgOshPwtkAf1g5xNNCTFuETk6LXhv+JD//b3E4afjj9DFlQXmxWQSL1ffVt8yBL6/+Jkon/SH6y/jyp3OGlBWCh6D4="
+#env:
+#  global:
+#    - secure: "Th3n6AmSSw5jkrkz77TW/YtCdOJ1bQDtDaDFmBUpSAnM2+PHnPnPl2yqtaPlYV5qV+0bTpQNqQ/mGuHHDYgOshPwtkAf1g5xNNCTFuETk6LXhv+JD//b3E4afjj9DFlQXmxWQSL1ffVt8yBL6/+Jkon/SH6y/jyp3OGlBWCh6D4="
 
 # don't just run the tests, also run Findbugs and friends
 script: mvn verify coveralls:jacoco
@@ -17,4 +17,4 @@ notifications:
   # about configuring notification recipients and more.
   email:
     recipients:
-      - sean.scanlon@gmail.com
+      - wrey75@gmail.com
