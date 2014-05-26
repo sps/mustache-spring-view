@@ -37,7 +37,7 @@
         <org.springframework.version>4.0.3.RELEASE</org.springframework.version>
         <jmustache.version>1.9</jmustache.version>
         <mustache.java.version>0.8.14</mustache.java.version>
-        <mockito.version>1.9.0</mockito.version>
+        <mockito.version>1.8.5</mockito.version>
         <junit.version>4.11</junit.version>
         <jdk.version>1.5</jdk.version>
     </properties>
