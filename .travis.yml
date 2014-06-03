@@ -4,19 +4,17 @@ install: echo "I trust Maven."
 
 env:
   global:
-     - secure: "rT6NzwhBiT1Ybvuuq5NfK0GZQ0woRHAXVaHCSRd7emJLa6lu/l7Vfit7qOIgB36RFLW23p0cFqcFmE1ewC9IE/xUnyvGmTvUBazeD8/u0VUYYV2fGDwP7yhVMf/pZbKTpbX6mjegLd0RYiLMvIK5fCRvy+op+3lrX/XYrPpAY24="
+    - secure: "Th3n6AmSSw5jkrkz77TW/YtCdOJ1bQDtDaDFmBUpSAnM2+PHnPnPl2yqtaPlYV5qV+0bTpQNqQ/mGuHHDYgOshPwtkAf1g5xNNCTFuETk6LXhv+JD//b3E4afjj9DFlQXmxWQSL1ffVt8yBL6/+Jkon/SH6y/jyp3OGlBWCh6D4="
 
 # don't just run the tests, also run Findbugs and friends
 script: mvn verify coveralls:jacoco
 
 jdk:
   - oraclejdk7
-  - openjdk7
-  - openjdk6
 
 notifications:
   # See http://about.travis-ci.org/docs/user/build-configuration/ to learn more
   # about configuring notification recipients and more.
   email:
     recipients:
-      - wrey75@gmail.com
+      - sean.scanlon@gmail.com
