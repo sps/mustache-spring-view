@@ -15,6 +15,11 @@
  */
 package org.springframework.web.servlet.view.mustache;
 
+import java.io.FileNotFoundException;
+import java.util.Locale;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.AbstractTemplateViewResolver;
@@ -24,7 +29,7 @@ import org.springframework.web.servlet.view.AbstractUrlBasedView;
  * @author Sean Scanlon <sean.scanlon@gmail.com>
  */
 public class MustacheViewResolver extends AbstractTemplateViewResolver implements ViewResolver {
-
+	private static Log LOG = LogFactory.getLog(MustacheViewResolver.class);
     private MustacheTemplateFactory templateFactory;
 
     public MustacheViewResolver() {
@@ -39,14 +44,27 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
     @Override
     protected AbstractUrlBasedView buildView(String viewName) throws Exception {
 
-        final MustacheView view = (MustacheView) super.buildView(viewName);
+        MustacheView view = (MustacheView) super.buildView(viewName);
 
-        final MustacheTemplate template = templateFactory.getTemplate(view.getUrl());
-        view.setTemplate(template);
-
+        try {
+        	final MustacheTemplate template = templateFactory.getTemplate(view.getUrl());
+        	view.setTemplate(template);
+        }
+//        catch( FileNotFoundException ex ){
+//        	LOG.debug("Template [" + viewName + "] not found.");
+//        }
+        catch( MustacheTemplateException ex ){
+        	if( ex.getCause() != null && ex.getCause() instanceof FileNotFoundException ){
+        		LOG.debug("Template [" + viewName + "] not found.");
+        		// view = null;
+        	}
+        	else throw ex; // simply rethrow!
+        }
         return view;
     }
 
+
+	
     @Required
     public void setTemplateFactory(MustacheTemplateFactory templateFactory) {
         this.templateFactory = templateFactory;

@@ -15,14 +15,21 @@
  */
 package org.springframework.web.servlet.view.mustache;
 
+import java.io.FileNotFoundException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.web.servlet.View;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -57,4 +64,30 @@ public class MustacheViewResolverTest {
         verify(templateFactory).getTemplate(viewName);
     }
 
+    @Test
+	public void testBuildViewReturnsNullWhenFileNotFound() throws Exception {
+		/*
+		 * Test the exception is well trapped in the checkResource()
+		 * used by Spring.
+		 * 
+		 */
+		doThrow(new MustacheTemplateException(new FileNotFoundException()))
+				.when(templateFactory).getTemplate(viewName);
+		View view = viewResolver.buildView(viewName);
+		
+		/*
+		 * Check the view is a Mustache View!
+		 */
+		assertTrue( view instanceof MustacheView);
+		
+		/*
+		 * If the view does not exists, then the template
+		 * is "null" and the "checkResource" will return
+		 * false.
+		 * 
+		 */
+		MustacheView mustacheView = (MustacheView)view;
+		assertNull( mustacheView.getTemplate() );
+		assertFalse( mustacheView.checkResource(null) );
+	}
 }
