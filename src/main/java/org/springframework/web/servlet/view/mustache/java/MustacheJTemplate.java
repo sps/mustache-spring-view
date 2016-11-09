@@ -32,4 +32,9 @@ public class MustacheJTemplate implements MustacheTemplate {
     public void execute(Object context, Writer out) throws MustacheTemplateException {
         template.execute(out, context);
     }
+
+    public void execute(Object context, Object parentContext, Writer out) throws MustacheTemplateException {
+        Object[] scopes = {context, parentContext};
+        template.execute(out, scopes);
+    }
 }

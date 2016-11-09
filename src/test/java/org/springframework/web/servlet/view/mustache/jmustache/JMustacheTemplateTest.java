@@ -36,6 +36,9 @@ public class JMustacheTemplateTest {
     private Object context;
 
     @Mock
+    private Object parentContext;
+
+    @Mock
     private Writer out;
 
     private JMustacheTemplate template;
@@ -49,5 +52,11 @@ public class JMustacheTemplateTest {
     public void testExecute() throws Exception {
         template.execute(context, out);
         verify(mockTemplate).execute(context, out);
+    }
+
+    @Test
+    public void testExecuteParentContext() throws Exception {
+      template.execute(context, parentContext, out);
+      verify(mockTemplate).execute(context, parentContext, out);
     }
 }

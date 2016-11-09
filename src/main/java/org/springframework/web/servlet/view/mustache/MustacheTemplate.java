@@ -22,4 +22,5 @@ public interface MustacheTemplate {
 
     public void execute(java.lang.Object context, java.io.Writer out) throws MustacheTemplateException;
 
+    public void execute(java.lang.Object context, java.lang.Object parentContext, java.io.Writer out) throws MustacheTemplateException;
 }
