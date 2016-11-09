@@ -21,6 +21,9 @@ public class MustacheJTemplateTest {
     private Object context;
 
     @Mock
+    private Object parentContext;
+
+    @Mock
     private Writer out;
 
     private MustacheJTemplate template;
@@ -34,5 +37,11 @@ public class MustacheJTemplateTest {
     public void testExecute() throws Exception {
         template.execute(context, out);
         verify(mockTemplate).execute(out, context);
+    }
+
+    @Test
+    public void testExecuteParentContext() throws Exception {
+      template.execute(context, parentContext, out);
+      verify(mockTemplate).execute(out, new Object[]{context, parentContext});
     }
 }

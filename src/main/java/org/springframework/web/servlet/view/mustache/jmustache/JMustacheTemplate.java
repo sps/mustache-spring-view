@@ -35,4 +35,8 @@ public class JMustacheTemplate implements MustacheTemplate {
     public void execute(Object context, Writer out) throws MustacheTemplateException {
         template.execute(context, out);
     }
+
+    public void execute(Object context, Object parentContext, Writer out) throws MustacheTemplateException {
+        template.execute(context, parentContext, out);
+    }
 }
