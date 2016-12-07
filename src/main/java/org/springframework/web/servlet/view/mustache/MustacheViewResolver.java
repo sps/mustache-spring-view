@@ -15,6 +15,8 @@
  */
 package org.springframework.web.servlet.view.mustache;
 
+import java.io.FileNotFoundException;
+
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.AbstractTemplateViewResolver;
@@ -41,9 +43,20 @@ public class MustacheViewResolver extends AbstractTemplateViewResolver implement
 
         final MustacheView view = (MustacheView) super.buildView(viewName);
 
-        final MustacheTemplate template = templateFactory.getTemplate(view.getUrl());
-        view.setTemplate(template);
-
+        try {
+        	final MustacheTemplate template = templateFactory.getTemplate(view.getUrl());
+        	view.setTemplate(template);
+        }
+        catch( MustacheTemplateException ex ){
+        	if( ex.getCause() instanceof FileNotFoundException ){
+        		// When the File is not found, just set the template to null!
+        		view.setTemplate(null);
+        	}
+        	else {
+        		// throw the exception (more grave)  
+        		throw ex;
+        	}
+        }
         return view;
     }
 

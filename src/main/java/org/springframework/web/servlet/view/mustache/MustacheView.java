@@ -15,12 +15,13 @@
  */
 package org.springframework.web.servlet.view.mustache;
 
-import com.samskivert.mustache.Template;
 import org.springframework.web.servlet.view.AbstractTemplateView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.Writer;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -47,4 +48,17 @@ public class MustacheView extends AbstractTemplateView {
     public MustacheTemplate getTemplate() {
         return template;
     }
+    
+	/**
+	 * Check whether the underlying resource that the configured URL points to
+	 * actually exists.
+	 * @param locale the desired Locale that we're looking for
+	 * @return {@code true} if the resource exists (or is assumed to exist);
+	 * {@code false} if we know that it does not exist
+	 * @throws Exception if the resource exists but is invalid (e.g. could not be parsed)
+	 */
+	public boolean checkResource(Locale locale) throws Exception {
+		boolean hasTemplate = (getTemplate() != null);
+		return hasTemplate;
+	}
 }

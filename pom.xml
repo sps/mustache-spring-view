@@ -5,14 +5,14 @@
         <artifactId>oss-parent</artifactId>
         <version>9</version>
     </parent>
-    <groupId>com.github.sps.mustache</groupId>
+    <groupId>com.github.wrey75.mustache</groupId>
     <artifactId>mustache-spring-view</artifactId>
     <packaging>jar</packaging>
     <version>1.5-SNAPSHOT</version>
     <name>mustache spring view</name>
     <description>a spring view for the mustache templating language http://mustache.github.com/
     </description>
-    <url>http://github.com/sps/mustache-spring-view</url>
+    <url>http://github.com/wrey75/mustache-spring-view</url>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -21,16 +21,16 @@
         </license>
     </licenses>
     <scm>
-        <url>http://github.com/sps/mustache-spring-view</url>
-        <connection>scm:git:git@github.com:sps/mustache-spring-view.git</connection>
-        <developerConnection>scm:git:git@github.com:sps/mustache-spring-view.git
+        <url>http://github.com/wrey75/mustache-spring-view</url>
+        <connection>scm:git:git@github.com:wrey75/mustache-spring-view.git</connection>
+        <developerConnection>scm:git:git@github.com:wrey75/mustache-spring-view.git
         </developerConnection>
     </scm>
     <developers>
         <developer>
-            <id>sps</id>
-            <name>Sean Scanlon</name>
-            <email>sean.scanlon@gmail.com</email>
+            <id>wrey75</id>
+            <name>William Rey</name>
+            <email>wrey75@gmail.com</email>
         </developer>
     </developers>
     <properties>
@@ -53,6 +53,42 @@
 	    </profile>
     </profiles>
     <build>
+      <pluginManagement>
+        <plugins>
+            <!--This plugin's configuration is used to store Eclipse m2e settings only.
+                It has no influence on the Maven build itself.-->
+            <plugin>
+                <groupId>org.eclipse.m2e</groupId>
+                <artifactId>lifecycle-mapping</artifactId>
+                <version>1.0.0</version>
+                <configuration>
+                    <lifecycleMappingMetadata>
+                        <pluginExecutions>
+                            <pluginExecution>
+                                <pluginExecutionFilter>
+                                    <groupId>org.jacoco</groupId>
+                                    <artifactId>jacoco-maven-plugin</artifactId>
+                                    <versionRange>[0.5,)
+                                    </versionRange>
+                                    <goals>
+                                        <goal>prepare-agent</goal>
+                                    </goals>
+                                </pluginExecutionFilter>
+                                <action>
+                                    <!-- m2e doesn't know what to do with jacoco,
+                                        let's ignore it or annoying error markers appear
+                                        see http://wiki.eclipse.org/M2E_plugin_execution_not_covered
+                                     -->
+                                    <ignore />
+                                </action>
+                            </pluginExecution>
+                        </pluginExecutions>
+                    </lifecycleMappingMetadata>
+                </configuration>
+            </plugin>
+        </plugins>
+    </pluginManagement>
+    
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -179,7 +215,6 @@
             <scope>provided</scope>
         </dependency>
 
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
@@ -230,4 +265,6 @@
         </dependency>
 
     </dependencies>
+    
+  
 </project>

@@ -16,6 +16,7 @@
 package org.springframework.web.servlet.view.mustache.jmustache;
 
 import com.samskivert.mustache.Mustache;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.servlet.view.mustache.MustacheTemplate;
