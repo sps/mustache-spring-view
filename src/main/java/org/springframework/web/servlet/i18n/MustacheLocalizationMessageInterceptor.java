@@ -54,14 +54,22 @@ public abstract class MustacheLocalizationMessageInterceptor extends HandlerInte
 
     private MessageSource messageSource;
     private LocaleResolver localeResolver;
-
+    private boolean useDefaultMessage;
+    private String defaultMessage;
 
     protected final void localize(final HttpServletRequest request, String frag, Writer out) throws IOException {
         final Locale locale = localeResolver.resolveLocale(request);
         final String key = extractKey(frag);
         final List<String> args = extractParameters(frag);
-        final String text = messageSource.getMessage(key, args.toArray(), locale);
+        final String text = this.getMessage(key, args, locale);
         out.write(text);
+    }
+
+    private String getMessage(String key, List<String> args, Locale locale) {
+        if (useDefaultMessage) {
+            return this.messageSource.getMessage(key, args.toArray(), this.defaultMessage, locale);
+        }
+        return this.messageSource.getMessage(key, args.toArray(), locale);
     }
 
     protected abstract Object createHelper(final HttpServletRequest request);
@@ -133,5 +141,11 @@ public abstract class MustacheLocalizationMessageInterceptor extends HandlerInte
         this.localeResolver = localeResolver;
     }
 
+    public void setDefaultMessage(String defaultMessage) {
+        this.defaultMessage = defaultMessage;
+    }
 
+    public void setUseDefaultMessage(boolean useDefaultMessage) {
+        this.useDefaultMessage = useDefaultMessage;
+    }
 }
