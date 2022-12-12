@@ -27,11 +27,13 @@ import java.nio.charset.Charset;
 
 public class JMustacheTemplateLoader implements Mustache.TemplateLoader, ResourceLoaderAware {
 
-    private ResourceLoader resourceLoader;
+    private final ResourceLoader resourceLoader;
 
     private String prefix = "";
 
     private String suffix = "";
+
+    public JMustacheTemplateLoader(final ResourceLoader resourceLoader) {this.resourceLoader = resourceLoader;}
 
     public void setPrefix(String prefix) {
         this.prefix = prefix;
@@ -56,8 +58,7 @@ public class JMustacheTemplateLoader implements Mustache.TemplateLoader, Resourc
         throw new FileNotFoundException(filename);
     }
 
-
-    public void setResourceLoader(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
+    @Override
+    public void setResourceLoader(final ResourceLoader resourceLoader) {
     }
 }

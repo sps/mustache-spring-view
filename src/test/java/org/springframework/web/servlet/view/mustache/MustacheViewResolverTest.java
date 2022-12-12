@@ -19,7 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.doReturn;
@@ -43,8 +43,7 @@ public class MustacheViewResolverTest {
 
     @Before
     public void setUp() throws Exception {
-        viewResolver = new MustacheViewResolver();
-        viewResolver.setTemplateFactory(templateFactory);
+        viewResolver = new MustacheViewResolver(templateFactory);
     }
 
     @Test

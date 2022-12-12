@@ -17,7 +17,6 @@ package org.springframework.web.servlet.view.mustache.jmustache;
 
 import com.samskivert.mustache.Mustache;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.servlet.view.mustache.MustacheTemplate;
 import org.springframework.web.servlet.view.mustache.MustacheTemplateException;
 import org.springframework.web.servlet.view.mustache.MustacheTemplateFactory;
@@ -68,7 +67,6 @@ public class JMustacheTemplateFactory implements MustacheTemplateFactory, Initia
         this.suffix = suffix;
     }
 
-    @Required
     public void setTemplateLoader(JMustacheTemplateLoader templateLoader) {
         this.templateLoader = templateLoader;
     }
