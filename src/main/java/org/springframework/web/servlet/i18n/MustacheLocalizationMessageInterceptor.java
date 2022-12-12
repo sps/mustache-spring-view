@@ -1,12 +1,12 @@
 /*
  * Copyright 2012 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,14 +15,14 @@
  */
 package org.springframework.web.servlet.i18n;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -37,24 +37,18 @@ import java.util.regex.Pattern;
  * <p/>
  * e.g. {{#i18n}}labels.global.mustache [arg1]...[argN]{{/i18n}}
  */
-public abstract class MustacheLocalizationMessageInterceptor extends HandlerInterceptorAdapter implements
-        MessageSourceAware {
-
+public abstract class MustacheLocalizationMessageInterceptor implements HandlerInterceptor, MessageSourceAware {
     /**
      * Default key to be used in message templates.
      * <p/>
      * e.g. {{i18n}}internationalize.this.key.please{{/i18n}}
      */
     public static final String DEFAULT_MODEL_KEY = "i18n";
-
     private static final Pattern KEY_PATTERN = Pattern.compile("(.*?)[\\s\\[]");
     private static final Pattern ARGS_PATTERN = Pattern.compile("\\[(.*?)\\]");
-
     private String messageKey = DEFAULT_MODEL_KEY;
-
     private MessageSource messageSource;
     private LocaleResolver localeResolver;
-
 
     protected final void localize(final HttpServletRequest request, String frag, Writer out) throws IOException {
         final Locale locale = localeResolver.resolveLocale(request);
@@ -66,18 +60,12 @@ public abstract class MustacheLocalizationMessageInterceptor extends HandlerInte
 
     protected abstract Object createHelper(final HttpServletRequest request);
 
-    @Override
-    public void postHandle(final HttpServletRequest request, final HttpServletResponse response,
-                           final Object handler,
-                           final ModelAndView modelAndView) throws Exception {
 
+    public void postHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler, final ModelAndView modelAndView) throws Exception {
         if (modelAndView != null) {
             modelAndView.addObject(messageKey, createHelper(request));
         }
-
-        super.postHandle(request, response, handler, modelAndView);
     }
-
 
     /**
      * Split key from (optional) arguments.
@@ -90,7 +78,6 @@ public abstract class MustacheLocalizationMessageInterceptor extends HandlerInte
         if (matcher.find()) {
             return matcher.group(1);
         }
-
         return key;
     }
 
@@ -132,6 +119,4 @@ public abstract class MustacheLocalizationMessageInterceptor extends HandlerInte
     public void setLocaleResolver(LocaleResolver localeResolver) {
         this.localeResolver = localeResolver;
     }
-
-
 }

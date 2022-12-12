@@ -6,6 +6,8 @@ package org.springframework.web.servlet.view.mustache.jmustache;
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Mustache.Lambda;
 import com.samskivert.mustache.Template;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -13,13 +15,11 @@ import org.springframework.context.MessageSource;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.Writer;
 import java.util.Locale;
 
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.eq;
+
 import static org.mockito.Mockito.*;
 
 /**

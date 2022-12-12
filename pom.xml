@@ -34,12 +34,12 @@
         </developer>
     </developers>
     <properties>
-        <org.springframework.version>4.0.3.RELEASE</org.springframework.version>
-        <jmustache.version>1.9</jmustache.version>
-        <mustache.java.version>0.8.14</mustache.java.version>
-        <mockito.version>1.9.0</mockito.version>
-        <junit.version>4.11</junit.version>
-        <jdk.version>1.5</jdk.version>
+        <org.springframework.version>6.0.2</org.springframework.version>
+        <jmustache.version>1.15</jmustache.version>
+        <mustache.java.version>0.9.10</mustache.java.version>
+        <mockito.version>4.9.0</mockito.version>
+        <junit.version>4.13.2</junit.version>
+        <jdk.version>17</jdk.version>
     </properties>
     <profiles>
 	    <profile>
@@ -56,7 +56,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>3.10.1</version>
                 <configuration>
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
@@ -80,27 +80,48 @@
                     </execution>
                 </executions>
             </plugin>
+<!--  New errors due to running spotbug.... -->
+<!--            [ERROR] Medium: org.springframework.web.servlet.i18n.MustacheLocalizationMessageInterceptor.setLocaleResolver(LocaleResolver) may expose internal representation by storing an externally mutable object into MustacheLocalizationMessageInterceptor.localeResolver [org.springframework.web.servlet.i18n.MustacheLocalizationMessageInterceptor] At MustacheLocalizationMessageInterceptor.java:[line 120] EI_EXPOSE_REP2-->
+<!--            [ERROR] Medium: Non-null field localeResolver is not initialized by new org.springframework.web.servlet.i18n.MustacheLocalizationMessageInterceptor() [org.springframework.web.servlet.i18n.MustacheLocalizationMessageInterceptor] At MustacheLocalizationMessageInterceptor.java:[lines 40-49] NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR-->
+<!--            [ERROR] Medium: Non-null field messageSource is not initialized by new org.springframework.web.servlet.i18n.MustacheLocalizationMessageInterceptor() [org.springframework.web.servlet.i18n.MustacheLocalizationMessageInterceptor] At MustacheLocalizationMessageInterceptor.java:[lines 40-49] NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR-->
+<!--            [ERROR] Medium: new org.springframework.web.servlet.view.mustache.MustacheViewResolver(MustacheTemplateFactory) may expose internal representation by storing an externally mutable object into MustacheViewResolver.templateFactory [org.springframework.web.servlet.view.mustache.MustacheViewResolver] At MustacheViewResolver.java:[line 30] EI_EXPOSE_REP2-->
+<!--            [ERROR] Medium: new org.springframework.web.servlet.view.mustache.java.MustacheJTemplate(Mustache) may expose internal representation by storing an externally mutable object into MustacheJTemplate.template [org.springframework.web.servlet.view.mustache.java.MustacheJTemplate] At MustacheJTemplate.java:[line 29] EI_EXPOSE_REP2-->
+<!--            [ERROR] Medium: org.springframework.web.servlet.view.mustache.jmustache.JMustacheTemplateFactory.setTemplateLoader(JMustacheTemplateLoader) may expose internal representation by storing an externally mutable object into JMustacheTemplateFactory.templateLoader [org.springframework.web.servlet.view.mustache.jmustache.JMustacheTemplateFactory] At JMustacheTemplateFactory.java:[line 71] EI_EXPOSE_REP2-->
+<!--            [INFO]-->
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>3.0.4</version>
-                <configuration>
-                    <effort>Max</effort>
-                    <threshold>Default</threshold>
-                    <xmlOutput>true</xmlOutput>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>4.7.3.0</version>
+                <dependencies>
+                    <!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
+                    <dependency>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs</artifactId>
+                        <version>4.7.3</version>
+                    </dependency>
+                </dependencies>
             </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.codehaus.mojo</groupId>-->
+<!--                <artifactId>findbugs-maven-plugin</artifactId>-->
+<!--                <version>3.0.4</version>-->
+<!--                <configuration>-->
+<!--                    <effort>Max</effort>-->
+<!--                    <threshold>Default</threshold>-->
+<!--                    <xmlOutput>true</xmlOutput>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>check</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.0.201403182114</version>
+                <version>0.8.8</version>
                 <executions>
                     <execution>
                         <id>default-prepare-agent</id>
@@ -122,11 +143,11 @@
                         </goals>
                         <configuration>
                             <rules>
-                                <!-- implmentation is needed only for Maven 2 -->
+                                <!-- implementation is needed only for Maven 2 -->
                                 <rule implementation="org.jacoco.maven.RuleConfiguration">
                                     <element>BUNDLE</element>
                                     <limits>
-                                        <!-- implmentation is needed only for Maven 2 -->
+                                        <!-- implementation is needed only for Maven 2 -->
                                         <limit implementation="org.jacoco.report.check.Limit">
                                             <counter>COMPLEXITY</counter>
                                             <value>COVEREDRATIO</value>
@@ -201,13 +222,13 @@
             <scope>provided</scope>
         </dependency>
 
-
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.4</version>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.0.0</version>
             <scope>provided</scope>
         </dependency>
+
 
         <dependency>
             <groupId>junit</groupId>

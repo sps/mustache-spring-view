@@ -48,7 +48,7 @@ public class JMustacheTemplateLoaderTest {
         resourceLoader = Mockito.mock(ResourceLoader.class);
         Mockito.doReturn(resource).when(resourceLoader).getResource(templateNameCaptor.capture());
 
-        loader = new JMustacheTemplateLoader();
+        loader = new JMustacheTemplateLoader(resourceLoader);
         loader.setResourceLoader(resourceLoader);
     }
 

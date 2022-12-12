@@ -17,9 +17,9 @@ package org.springframework.web.servlet.view.mustache.jmustache;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.servlet.i18n.MustacheLocalizationMessageInterceptor;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.Writer;
 
