@@ -56,7 +56,7 @@ Spring Configuration
         </property>
     </bean>
 
-    
+
 
 Localization Support
 ---------------
@@ -72,7 +72,54 @@ Localization Support
 	<bean id="i18nMessageInterceptor" class="org.springframework.web.servlet.view.mustache.jmustache.LocalizationMessageInterceptor">
         <property name="localeResolver" ref="..." />
     </bean>
+
+Spring Boot 3 - Configuration
+-------------
+Once you have a spring boot 3 web application running, register the mustache spring view dependency via the pom.xml:
+```
+<dependency>
+    <groupId>com.github.sps.mustache</groupId>
+    <artifactId>mustache-spring-view</artifactId>
+    <version>1.5-SNAPSHOT</version>
+</dependency>
+```
+Create the localization implementation for mustache i18n lambda
+```
+public class LocalizationMessageInterceptor extends MustacheLocalizationMessageInterceptor {
+    public LocalizationMessageInterceptor() {
+    }
+
+    protected Object createHelper(final HttpServletRequest request) {
+        return new Mustache.Lambda() {
+            public void execute(Template.Fragment frag, Writer out) throws IOException {
+                LocalizationMessageInterceptor.this.localize(request, frag.execute(), out);
+            }
+        };
+    }
+}
+```
+Register the localization implementation
+```
+@Component 
+public class InterceptorRegistration  implements WebMvcConfigurer {
+    @Autowired
+    LocalizationMessageInterceptor localizationMessageInterceptor;
     
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(localizationMessageInterceptor);
+    }
+}
+```
+Ensure to add your `messages.properties` files in your application.yaml:
+```
+spring:
+    messages:
+        basename: "messages.error.messages,messages.business.messages"
+```
+This means: having a directory `messages` containing `error` and `business` directory, having messages bundle within it (messages.properties messages_uk.
+properties etc)
+
 
 Thanks
 ---------------
